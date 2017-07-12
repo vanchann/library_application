@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- definition of simple types -->
+<xs:element name="library">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="schema">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="5"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="type">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="book"/>
+            <xs:enumeration value="game"/>
+            <xs:enumeration value="music"/>
+            <xs:enumeration value="video"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<!-- definition of complex types -->
+<xs:element name="types">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="type" minOccurs="1" maxOccurs="4"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="config">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="library"/>
+            <xs:element ref="schema"/>
+            <xs:element ref="types"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>
