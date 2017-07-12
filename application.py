@@ -5,7 +5,7 @@ import sys
 import platform
 import os
 from lxml import etree
-from library.management import Manager
+from library.game_management import GameManager
 
 """
 Class: Application
@@ -55,10 +55,23 @@ class Application:
             print("Supported library types by current configuration: {}".format(supportedlibs))
             sys.exit(3)
 
-        # Create library manager.
-        manager = Manager(os.path.join(self.__rundir, "storage"), libtype)
-        manager.show_all_elements()
-    # End of method load_library,
+        # Create xml tree.
+        tree = etree.parse(self.__confxml)
+        # Find library filename.
+        libfile = tree.find("/library").text
+        # Find library schema filename.
+        libschemafile =tree.find("/schema").text
+
+        # Create library manager for specific library type.
+        if libtype == "game":
+            manager = GameManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
+            if manager.validate() == 0:
+                print("Validates")
+            else:
+                print("Not validates")
+        else:
+            print("Unsupported library type {}.".format(libtype))
+    # End of method load_library.
 
     """
     Method: library_types
@@ -126,7 +139,7 @@ class Application:
             # Create configuration directory if it does not exist.
             if not os.path.isdir(self.__confdir):
                 os.mkdir(self.__confdir)
-        except IOError:
+        except OSError:
             self.__errorexit(conffile, "directory")
 
         # Create configuration files.
@@ -189,7 +202,7 @@ class Application:
         xmlout = etree.ElementTree(root)
         try:
             xmlout.write(self.__confxml, xml_declaration=True, encoding="UTF-8", pretty_print=True)
-        except IOError:
+        except OSError:
             self.__errorexit(conffile)
 
         # Create the xsd tree.
@@ -250,7 +263,7 @@ class Application:
         xsdout = etree.ElementTree(xsdroot)
         try:
             xsdout.write(self.__confxsd, xml_declaration=True, encoding="UTF-8", pretty_print=True)
-        except IOError:
+        except OSError:
             self.__errorexit(confschema)
     # End of method __createconf.
 
@@ -311,7 +324,7 @@ Function: main
 Entry point for the execution of the script.
 """
 def main():
-    app = Application()
+    print(__file__)
 # End of function main.
 
 # Test running or loading
