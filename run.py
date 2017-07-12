@@ -39,7 +39,7 @@ def main():
         app.load_library(args.load.lower())
         return
     # Display menu
-    app.load_library(app.show_menu())
+    app.show_menu()
 # End of function main
 
 # Test running or loading

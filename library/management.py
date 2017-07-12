@@ -4,7 +4,9 @@
 import os
 import sys
 import shutil
+import platform
 from lxml import etree
+from library.support.utility import Utility
 
 """
 Class: Manager
@@ -12,8 +14,6 @@ Class: Manager
 Abstract class.
 The Manager class uses XML to store and manage elements.
 Contents maybe created, parsed and destroyed.
-The class also supports validation of the XML file given an XSD schema, so that
-it may be used independently.
 """
 class Manager:
     """
@@ -26,9 +26,68 @@ class Manager:
         self._libtype = libtype
         self._xmlfile = os.path.join(self._storageroot, self._libtype, libfile)
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
-        #print(self._xmlfile)
-        #print(self._xsdfile)
     # End of initializer
+
+    """
+    Method: show_menu
+
+    Displays management menu.
+    """
+    def show_menu(self):
+        # Initialize local variables
+        avchoices = range(2)
+        choice = None
+
+        # Generate menu
+        while choice not in avchoices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Available actions for library {}:".format(self._libtype.upper()))
+            print("1. Storage utilities")
+            print("0. Exit library")
+            # Get user choice.
+            try:
+                choice = int(input("Enter your choice: "))
+            except ValueError:
+                choice = None
+
+            # React to user choice.
+            if choice == 0:
+                return
+            elif choice == 1:
+                self.show_utility_menu()
+            choice = None
+    # End of method show_menu.
+
+    """
+    Method: show_utility_menu
+
+    Displays storage utility menu.
+    """
+    def show_utility_menu(self):
+        # Initialize local variables
+        avchoices = range(1)
+        choice = None
+
+        # Generate menu
+        while choice not in avchoices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Available storage utilities:")
+            print("0. Back")
+            # Get user choice.
+            try:
+                choice = int(input("Enter your choice: "))
+            except ValueError:
+                choice = None
+
+            # React to user choice.
+            if choice == 0:
+                return
+            choice = None
+    # End of method show_utility_menu.
 
     # Implemented methods, whis may be called from a Manager instance object..
     """
@@ -38,20 +97,7 @@ class Manager:
     Returns 0 if validates, 1 if not and 2 in case of error.
     """
     def validate(self):
-        try:
-            with open(self._xsdfile, 'r') as xsdfile, open(self._xmlfile, 'r') as xmlfile:
-                # Create schema object.
-                xmlschema_doc = etree.parse(xsdfile)
-                xmlschema = etree.XMLSchema(xmlschema_doc)
-                # Create xml tree.
-                xmldoc = etree.parse(xmlfile)
-                # Validate.
-                if xmlschema.validate(xmldoc):
-                    return 0
-                else:
-                    return 1
-        except FileNotFoundError:
-            return 2
+        return Utility.validate(self._xsdfile, self._xmlfile)
     # End of method validate.
 
     """
@@ -175,15 +221,6 @@ class Manager:
     # End of method edit_element.
 
     # Display methods.
-    """
-    Method: show_menu
-
-    Displays management menu.
-    """
-    def show_menu(self):
-        raise NotImplementedError("Method show_menu should be implemented in child class.")
-    # End of method show_menu.
-
     """
     Method: show_all_elements
 

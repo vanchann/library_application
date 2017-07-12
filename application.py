@@ -6,6 +6,7 @@ import platform
 import os
 from lxml import etree
 from library.game_management import GameManager
+from library.support.utility import Utility
 
 """
 Class: Application
@@ -34,7 +35,7 @@ class Application:
     """
     def __invalidconfexit(self):
         # Load configuration
-        if self.validate(self.__confxsd, self.__confxml) != 0:
+        if Utility.validate(self.__confxsd, self.__confxml) != 0:
             # Validation has failed.
             print("Invalid configuration. Please reconfigure the application")
             sys.exit(2)
@@ -65,10 +66,7 @@ class Application:
         # Create library manager for specific library type.
         if libtype == "game":
             manager = GameManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
-            if manager.validate() == 0:
-                print("Validates")
-            else:
-                print("Not validates")
+            manager.show_menu()
         else:
             print("Unsupported library type {}.".format(libtype))
     # End of method load_library.
@@ -107,7 +105,7 @@ class Application:
         # Generate menu
         while choice not in avchoices:
             # Clear display.
-            self.clear()
+            Utility.clear()
             # Display menu
             print("Available library types:")
             index = 0
@@ -121,12 +119,13 @@ class Application:
             except ValueError:
                 choice = None
 
-        # Exit cleanly if user has selected to quit.
-        if choice == 0:
-            print("Execution terminated.")
-            sys.exit(0)
+            # Exit cleanly if user has selected to quit.
+            if choice == 0:
+                print("Execution terminated.")
+                sys.exit(0)
 
-        return avtypes[choice - 1]
+            self.load_library(avtypes[choice - 1])
+            choice = None
     # End of method show_menu
 
     """
@@ -155,7 +154,7 @@ class Application:
     """
     def validate_configuration(self):
         # Validate configuration.
-        if self.validate(self.__confxsd, self.__confxml) == 0:
+        if Utility.validate(self.__confxsd, self.__confxml) == 0:
             # Validation was successful.
             print("Validates")
         else:
@@ -280,41 +279,6 @@ class Application:
         # Exit with an error code.
         sys.exit(1)
     # End of method __errorexit.
-
-    """
-    Method: clear
-
-    Cleans output based on the platform.
-    """
-    def clear(self):
-        if platform.system() == "Windows":
-            os.system("cls")
-        else:
-            os.system("clear")
-    # End of method clear.
-
-    """
-    Method: validate
-
-    Validates XML file given an XSD schema.
-    Returns 0 if validates, 1 if not and 2 in case of error.
-    """
-    def validate(self, schemafile, testfile):
-        try:
-            with open(schemafile, 'r') as xsdfile, open(testfile, 'r') as xmlfile:
-                # Create schema object.
-                xmlschema_doc = etree.parse(xsdfile)
-                xmlschema = etree.XMLSchema(xmlschema_doc)
-                # Create xml tree.
-                xmldoc = etree.parse(xmlfile)
-                # Validate.
-                if xmlschema.validate(xmldoc):
-                    return 0
-                else:
-                    return 1
-        except FileNotFoundError:
-            return 2
-    # End of method validate.
 # End of class Application.
 
 # The following section contains code to execute when script is run from the command line.
