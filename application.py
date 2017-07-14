@@ -123,8 +123,8 @@ class Application:
             # Exit menu.
             if choice == 0:
                 return
-
-            self.load_library(avtypes[choice - 1])
+            elif choice in avchoices:
+                self.load_library(avtypes[choice - 1])
             choice = None
     # End of method show_menu
 
