@@ -7,7 +7,7 @@ import run
 """
 Class: TestRunModule
 
-Unittests for starting application module run.
+Testcases for starting application module run.
 """
 class TestRunModule(unittest.TestCase):
     """

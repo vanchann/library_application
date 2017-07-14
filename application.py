@@ -68,7 +68,8 @@ class Application:
             manager = GameManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
             manager.show_menu()
         else:
-            print("Unsupported library type {}.".format(libtype))
+            print("Not yet inmplemented library type {}.".format(libtype))
+            input("Press 'Enter' to return to menu: ")
     # End of method load_library.
 
     """
@@ -119,10 +120,9 @@ class Application:
             except ValueError:
                 choice = None
 
-            # Exit cleanly if user has selected to quit.
+            # Exit menu.
             if choice == 0:
-                print("Execution terminated.")
-                sys.exit(0)
+                return
 
             self.load_library(avtypes[choice - 1])
             choice = None

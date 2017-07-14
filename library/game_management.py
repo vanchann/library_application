@@ -4,6 +4,7 @@
 import os
 import sys
 from lxml import etree
+from lxml import objectify
 from library.management import Manager
 #from library.support.utility import Utility
 
@@ -103,6 +104,15 @@ class GameManager(Manager):
             return 2
     # End of method restore_schema.
 
+    """
+    Method: search_elements
+
+    Search for elements containing a given value.
+    """
+    def search_elements(self, element, value):
+        raise NotImplementedError("Method get_element should be implemented in child class.")
+    # End of method search_elements.
+
     # Element manipulation methods.
     """
     Method: get_all_elements
@@ -116,10 +126,26 @@ class GameManager(Manager):
     """
     Method: get_element
 
-    Gets an element.
+    Gets an element by unique value.
     """
     def get_element(self, element):
-        raise NotImplementedError("Method get_element should be implemented in child class.")
+        # Validate storage.
+        validate = self.validate()
+        if validate != 0:
+            return validate
+
+        # Create xml tree.
+        tree = etree.parse(self._xmlfile)
+        # Find node.
+        # Scheme validation garanties unique key value, so a list containing
+        # only one element on an empty one will be returned.
+        tnodes = tree.xpath("/library/{0}/title[text()='{1}']/ancestor::{0}".format(self._libtype, element))
+
+        # Return element if exists or none if list is empty
+        if tnodes:
+            return tnodes[0]
+        else:
+            return None
     # End of method get_element.
 
     """
@@ -165,7 +191,28 @@ class GameManager(Manager):
     Shows an element.
     """
     def show_element(self):
-        raise NotImplementedError("Method show_element should be implemented in child class.")
+        # Get user input.
+        print("Exact match will be made!")
+        title = input("Enter the title of the game: ")
+        # Get element.
+        element = self.get_element(title)
+        print()
+        # Display result.
+        if element is None:
+            print("No game with title {} found.".format(title))
+        else:
+            # Iterate though result as needed and display game information.
+            print("{}:".format(element.tag.title()))
+            for item in element.iterchildren():
+                if item.text is not None:
+                    depth = 4
+                    print("{}{}: {}".format(" " * depth, item.tag.title(), item.text.strip()))
+                    for subitem in item.iterchildren():
+                        if subitem.text is not None:
+                            depth = 8
+                            print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
+        print()
+        input("Press 'Enter' to return to menu: ")
     # End of method show_element.
 
     """
@@ -173,7 +220,7 @@ class GameManager(Manager):
 
     Shows the element editor.
     """
-    def show_element_editor(self, element):
+    def show_element_editor(self, element = None):
         raise NotImplementedError("Method show_element_editor should be implemented in child class.")
     # End of method show_element_editor.
 # End of class GameManager.

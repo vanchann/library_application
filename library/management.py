@@ -44,7 +44,8 @@ class Manager:
             Utility.clear()
             # Display menu
             print("Available actions for library {}:".format(self._libtype.upper()))
-            print("1. Storage utilities")
+            print("1. Display item by unique value")
+            print("9. Storage utilities")
             print("0. Exit library")
             # Get user choice.
             try:
@@ -56,6 +57,9 @@ class Manager:
             if choice == 0:
                 return
             elif choice == 1:
+                Utility.clear()
+                self.show_element()
+            elif choice == 9:
                 self.show_utility_menu()
             choice = None
     # End of method show_menu.
@@ -174,6 +178,15 @@ class Manager:
         """
     # End of method restore_schema.
 
+    """
+    Method: search_elements
+
+    Search for elements containing a given value.
+    """
+    def search_elements(self, element, value):
+        raise NotImplementedError("Method get_element should be implemented in child class.")
+    # End of method search_elements.
+
     # Element manipulation methods.
     """
     Method: get_all_elements
@@ -187,7 +200,7 @@ class Manager:
     """
     Method: get_element
 
-    Gets an element.
+    Gets an element by unique value.
     """
     def get_element(self, element):
         raise NotImplementedError("Method get_element should be implemented in child class.")
@@ -244,7 +257,7 @@ class Manager:
 
     Shows the element editor.
     """
-    def show_element_editor(self, element):
+    def show_element_editor(self, element = None):
         raise NotImplementedError("Method show_element_editor should be implemented in child class.")
     # End of method show_element_editor.
 # End of class Manager.
