@@ -160,7 +160,7 @@ class Application:
         else:
             # Validation has failed.
             print("Configuration does not validate.")
-            # Ask user fot create new configuration.
+            # Ask user for creating new configuration.
             newconf = ""
             while newconf.lower() != "y" and newconf.lower() != "n":
                 newconf = input("Create new configuration files y(will overwrite existed files)/n? ")

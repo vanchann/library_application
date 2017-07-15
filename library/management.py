@@ -28,6 +28,7 @@ class Manager:
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
     # End of initializer
 
+    # Implemented methods, whis may be called from a Manager instance object.
     """
     Method: show_menu
 
@@ -80,6 +81,11 @@ class Manager:
             Utility.clear()
             # Display menu
             print("Available storage utilities:")
+            print("1. Validate library storage")
+            print("2. Backup library")
+            print("3. Restore library from backup")
+            print("4. Create new empty library")
+            print("5. Restore library schema")
             print("0. Back")
             # Get user choice.
             try:
@@ -90,10 +96,160 @@ class Manager:
             # React to user choice.
             if choice == 0:
                 return
+            elif choice == 1:
+                self.show_validation()
+            elif choice == 2:
+                self.show_backup()
+            elif choice == 3:
+                self.show_restore()
+            elif choice == 4:
+                self.show_create_library()
+            elif choice == 5:
+                self.show_restore_schema()
             choice = None
     # End of method show_utility_menu.
 
-    # Implemented methods, whis may be called from a Manager instance object..
+    """
+    Method: show_validation
+
+    Displays library storage file validation results.
+    """
+    def show_validation(self):
+        Utility.clear()
+        if self.validate() == 0:
+            print("Validates.")
+        else:
+            print("Does NOT validate.")
+        input("Press 'Enter' to continue: ")
+    # End of method show_validation.
+
+    """
+    Method: show_backup
+
+    Displays backup messages.
+    """
+    def show_backup(self):
+        Utility.clear()
+        if os.path.isfile(self._xmlfile + ".back"):
+            # Ask user for overwriting existed backup file.
+            overwrite = ""
+            while overwrite.lower() != "y" and overwrite.lower() != "n":
+                overwrite = input("A backup file already exists. Overwrite [y/n]? ")
+
+            # Making sure that only Y or y will overwrite the backup.
+            if overwrite.lower() != "y":
+                print("Nothing has changed.")
+                input("Press 'Enter' to continue: ")
+                return
+
+        # If there isn't any backup already or the user has entered Y or y
+        # create a new backup, overwriting existed one if any.
+        if self.backup() == 0:
+            print("New backup file has been created successfully.")
+        else:
+            print("Backup process has failed.")
+            print("Make sure a [valid] '{}' file exists and you have write privilege in containing folder.".format(self._xmlfile))
+
+        input("Press 'Enter' to continue: ")
+    # End of method show_backup.
+
+    """
+    Method: show_restore
+
+    Displays messages for restoring the library file form backup.
+    """
+    def show_restore(self):
+        Utility.clear()
+        backupfile = self._xmlfile + ".back"
+        if os.path.isfile(backupfile):
+            # Validate backup file before continue.
+            if Utility.validate(self._xsdfile, backupfile) != 0:
+                print("'{}' is not a valid library file.".format(self._xmlfile))
+                print("Nothing has changed.")
+                input("Press 'Enter' to continue: ")
+                return
+            # Ask user for overwriting existed library file.
+            overwrite = ""
+            while overwrite.lower() != "y" and overwrite.lower() != "n":
+                overwrite = input("This operation will overwrite existed library if any. Continue [y/n]? ")
+
+            # Making sure that only Y or y will overwrite the backup.
+            if overwrite.lower() != "y":
+                print("Nothing has changed.")
+                input("Press 'Enter' to continue: ")
+                return
+
+            # Restore library file, overwriting existed one if any.
+            if self.restore() == 0:
+                print("Library file has been restored successfully.")
+            else:
+                print("Library restoration process has failed.")
+                print("Make sure a [valid] '{}' file exists and you have write privilege in containing folder.".format(backupfile))
+        else:
+            print("No backup file has been found.")
+        input("Press 'Enter' to continue: ")
+    # End of method show_restore.
+
+    """
+    Method: show_create_library
+
+    Displays messages for creating a new empty library.
+    """
+    def show_create_library(self):
+        Utility.clear()
+        if os.path.isfile(self._xmlfile):
+            # Ask user for overwriting existed library.
+            overwrite = ""
+            while overwrite.lower() != "y" and overwrite.lower() != "n":
+                overwrite = input("This operation will overwrite the existed library. Continue [y/n]? ")
+
+            # Making sure that only Y or y will overwrite the existed library.
+            if overwrite.lower() != "y":
+                print("Nothing has changed.")
+                input("Press 'Enter' to continue: ")
+                return
+
+        # If there isn't any library file already or the user has entered Y or y
+        # create a new empty library, overwriting existed one if any.
+        if self.create_library() == 0:
+            print("New empty library has been created successfully.")
+        else:
+            print("New library creation process has failed.")
+            print("Make sure you have write privilege in '{}' folder.".format(os.path.join(self._storageroot, self._libtype)))
+
+        input("Press 'Enter' to continue: ")
+    # End of method show_create_library.
+
+    """
+    Method: show_restore_schema
+
+    Displays messages for restoring the library schema file.
+    """
+    def show_restore_schema(self):
+        Utility.clear()
+        if os.path.isfile(self._xsdfile):
+            # Ask user for overwriting existed schema file.
+            overwrite = ""
+            while overwrite.lower() != "y" and overwrite.lower() != "n":
+                overwrite = input("This operation will overwrite the existed library schema. Continue [y/n]? ")
+
+            # Making sure that only Y or y will overwrite the existed schema.
+            if overwrite.lower() != "y":
+                print("Nothing has changed.")
+                input("Press 'Enter' to continue: ")
+                return
+
+        # If there isn't any schema file already or the user has entered Y or y
+        # restore the default library schema, overwriting existed one if any.
+        if self.restore_schema() == 0:
+            print("Default library schema has been restored successfully.")
+        else:
+            print("Library schema restoration process has failed.")
+            print("Make sure you have write privilege in '{}' folder.".format(os.path.join(self._storageroot, self._libtype)))
+
+        input("Press 'Enter' to continue: ")
+    # End of method show_restore_schema.
+
     """
     Method: validate
 

@@ -39,18 +39,21 @@ class GameManager(Manager):
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <!-- definition of simple elements -->
-<xs:element name="title" type="xs:string">
-    <xs:unique name="uniqueTitle">
-        <xs:selector xpath="title"/>
-        <xs:field xpath="."/>
-    </xs:unique>
-</xs:element>
+<xs:element name="title" type="xs:string"/>
 <xs:element name="shop" type="xs:string"/>
-<xs:element name="finished" type="xs:boolean" default="false"/>
 <xs:element name="lastupdated" type="xs:date"/>
 <xs:element name="filename" type="xs:string"/>
 
 <!-- definition of simple types -->
+<xs:element name="finished">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
 <xs:element name="system">
     <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -77,8 +80,8 @@ class GameManager(Manager):
     <xs:complexType>
         <xs:sequence>
             <xs:element ref="title"/>
-            <xs:element ref="shop"/>
-            <xs:element ref="finished"/>
+            <xs:element ref="shop" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="finished" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="installer" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
@@ -90,6 +93,10 @@ class GameManager(Manager):
             <xs:element ref="game" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:unique name="uniqueTitle">
+        <xs:selector xpath="game/title"/>
+        <xs:field xpath="."/>
+    </xs:unique>
 </xs:element>
 
 </xs:schema>
