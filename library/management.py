@@ -341,7 +341,7 @@ class Manager:
 
     Gets all elements in the specified order.
     """
-    def get_all_elements(self, order = None):
+    def get_all_elements(self, element = None, ascending = True):
         raise NotImplementedError("Method get_all_elements should be implemented in child class.")
     # End of method get_all_elements.
 
