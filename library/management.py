@@ -131,10 +131,8 @@ class Manager:
     def show_backup(self):
         Utility.clear()
         if os.path.isfile(self._xmlfile + ".back"):
-            # Ask user for overwriting existed backup file.
-            overwrite = ""
-            while overwrite.lower() != "y" and overwrite.lower() != "n":
-                overwrite = input("A backup file already exists. Overwrite [y/n]? ")
+            # Ask user for overwriting existing backup file.
+            overwrite = Utility.get_answer_yn("A backup file already exists. Overwrite [y/n]? ")
 
             # Making sure that only Y or y will overwrite the backup.
             if overwrite.lower() != "y":
@@ -143,7 +141,7 @@ class Manager:
                 return
 
         # If there isn't any backup already or the user has entered Y or y
-        # create a new backup, overwriting existed one if any.
+        # create a new backup, overwriting existing one if any.
         if self.backup() == 0:
             print("New backup file has been created successfully.")
         else:
@@ -168,10 +166,8 @@ class Manager:
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
-            # Ask user for overwriting existed library file.
-            overwrite = ""
-            while overwrite.lower() != "y" and overwrite.lower() != "n":
-                overwrite = input("This operation will overwrite existed library if any. Continue [y/n]? ")
+            # Ask user for overwriting existing library file.
+            overwrite = Utility.get_answer_yn("This operation will overwrite existing library if any. Continue [y/n]? ")
 
             # Making sure that only Y or y will overwrite the backup.
             if overwrite.lower() != "y":
@@ -179,7 +175,7 @@ class Manager:
                 input("Press 'Enter' to continue: ")
                 return
 
-            # Restore library file, overwriting existed one if any.
+            # Restore library file, overwriting existing one if any.
             if self.restore() == 0:
                 print("Library file has been restored successfully.")
             else:
@@ -198,19 +194,17 @@ class Manager:
     def show_create_library(self):
         Utility.clear()
         if os.path.isfile(self._xmlfile):
-            # Ask user for overwriting existed library.
-            overwrite = ""
-            while overwrite.lower() != "y" and overwrite.lower() != "n":
-                overwrite = input("This operation will overwrite the existed library. Continue [y/n]? ")
+            # Ask user for overwriting existing library.
+            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library. Continue [y/n]? ")
 
-            # Making sure that only Y or y will overwrite the existed library.
+            # Making sure that only Y or y will overwrite the existing library.
             if overwrite.lower() != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
 
         # If there isn't any library file already or the user has entered Y or y
-        # create a new empty library, overwriting existed one if any.
+        # create a new empty library, overwriting existing one if any.
         if self.create_library() == 0:
             print("New empty library has been created successfully.")
         else:
@@ -228,19 +222,17 @@ class Manager:
     def show_restore_schema(self):
         Utility.clear()
         if os.path.isfile(self._xsdfile):
-            # Ask user for overwriting existed schema file.
-            overwrite = ""
-            while overwrite.lower() != "y" and overwrite.lower() != "n":
-                overwrite = input("This operation will overwrite the existed library schema. Continue [y/n]? ")
+            # Ask user for overwriting existing schema file.
+            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library schema. Continue [y/n]? ")
 
-            # Making sure that only Y or y will overwrite the existed schema.
+            # Making sure that only Y or y will overwrite the existing schema.
             if overwrite.lower() != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
 
         # If there isn't any schema file already or the user has entered Y or y
-        # restore the default library schema, overwriting existed one if any.
+        # restore the default library schema, overwriting existing one if any.
         if self.restore_schema() == 0:
             print("Default library schema has been restored successfully.")
         else:

@@ -25,6 +25,19 @@ class Utility:
     # End of static method clear.
 
     """
+    Static method: get_answer_yn
+
+    Asks for input until a Y/y or N/n has been entered.
+    """
+    @staticmethod
+    def get_answer_yn(question):
+        answer = ""
+        while answer.lower() != "y" and answer.lower() != "n":
+            answer = input(question)
+        return answer
+    # End of static method get_answer_yn.
+
+    """
     Method: validate
 
     Validates XML file given an XSD schema.
