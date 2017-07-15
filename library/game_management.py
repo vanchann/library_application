@@ -198,7 +198,9 @@ class GameManager(Manager):
         element = self.get_element(title)
         print()
         # Display result.
-        if element is None:
+        if isinstance(element, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        elif element is None:
             print("No game with title {} found.".format(title))
         else:
             # Iterate though result as needed and display game information.

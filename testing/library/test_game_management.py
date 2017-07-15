@@ -2,8 +2,14 @@
 
 # Imports
 import unittest
-import os
+#import os
 from lxml.etree import _Element
+# Set path for importing application modules
+import sys
+import os
+appdir = os.path.abspath(__file__).split("/testing/")[0]
+sys.path.insert(0, appdir)
+# Import application modules
 from library.game_management import GameManager
 
 """
