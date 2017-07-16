@@ -43,8 +43,8 @@
     <xs:complexType>
         <xs:sequence>
             <xs:element ref="title"/>
-            <xs:element ref="shop" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="finished" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="shop"/>
+            <xs:element ref="finished"/>
             <xs:element ref="installer" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>

@@ -6,7 +6,7 @@ import sys
 from lxml import etree
 #from lxml import objectify
 from library.management import Manager
-#from library.support.utility import Utility
+from library.support.utility import Utility
 
 """
 Class: GameManager
@@ -23,6 +23,8 @@ class GameManager(Manager):
     """
     def __init__(self, storageroot, libfile, schemafile):
         super().__init__(storageroot, libfile, schemafile, "game")
+        # Allow sorting element tags.
+        self._sortingtags = ["title", "shop", "finished"]
     # End of initializer
 
     # NOT implemented parent methods. Child class should implemented them, based on their storage settings.
@@ -80,8 +82,8 @@ class GameManager(Manager):
     <xs:complexType>
         <xs:sequence>
             <xs:element ref="title"/>
-            <xs:element ref="shop" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="finished" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="shop"/>
+            <xs:element ref="finished"/>
             <xs:element ref="installer" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
@@ -127,7 +129,27 @@ class GameManager(Manager):
     Gets all elements in the specified order.
     """
     def get_all_elements(self, element = None, ascending = True):
-        raise NotImplementedError("Method get_all_elements should be implemented in child class.")
+        # Validate storage.
+        validate = self.validate()
+        if validate != 0:
+            return validate
+
+        # Create xml tree.
+        tree = etree.parse(self._xmlfile)
+        # Get a list of all elements.
+        tnodes = tree.xpath("/library/{}".format(self._libtype))
+
+        # Return elements if exist or none if list is empty.
+        if tnodes:
+            # If element is None, title is used.
+            if element is None:
+                element = "title"
+            # Sort the list.
+            index = self._sortingtags.index(element)
+            tnodes.sort(key = lambda element: element[index].text.title(), reverse = not ascending)
+            return tnodes
+        else:
+            return None
     # End of method get_all_elements.
 
     """
@@ -189,7 +211,65 @@ class GameManager(Manager):
     Shows all elements.
     """
     def show_all_elements(self):
-        raise NotImplementedError("Method show_all_elements should be implemented in child class.")
+        # Generate menu
+        choices = range(1, 4)
+        choice = None
+        while choice not in choices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Sort by:")
+            i = 0
+            for sorttag in self._sortingtags:
+                i += 1
+                print("{}. {}".format(i, sorttag))
+            # Get user choice.
+            try:
+                choice = int(input("Enter your choice [default 1]: "))
+            except ValueError:
+                choice = None
+        tag =  self._sortingtags[choice -1]
+
+        choices = range(1, 3)
+        choice = None
+        while choice not in choices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Order:")
+            print("1. Ascending")
+            print("2. Descending")
+            # Get user choice.
+            try:
+                choice = int(input("Enter your choice [default 1]: "))
+            except ValueError:
+                choice = None
+        if choice == 1:
+            order = True
+        else:
+            order = False
+
+        # Get all elements
+        elements = self.get_all_elements(tag , order)
+        # Display results
+        if isinstance(elements, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        elif elements is None:
+            print("The library is empty.")
+        else:
+            # Iterate though result as needed and display game information.
+            for element in elements:
+                print("{}:".format(element.tag.title()))
+                for item in element.iterchildren():
+                    if item.text is not None:
+                        depth = 4
+                        print("{}{}: {}".format(" " * depth, item.tag.title(), item.text.strip()))
+                        for subitem in item.iterchildren():
+                            if subitem.text is not None:
+                                depth = 8
+                                print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
+        print()
+        input("Press 'Enter' to return to menu: ")
     # End of method show_all_elements.
 
     """

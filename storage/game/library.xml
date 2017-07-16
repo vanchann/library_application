@@ -6,7 +6,7 @@
     <game>
         <title>Test</title>
         <shop>DRM-free</shop>
-        <finished>No</finished>
+        <finished>Yes</finished>
         <installer>
             <system>Windows</system>
             <lastupdated>2017-07-14</lastupdated>
@@ -22,5 +22,17 @@
     </game>
     <game>
         <title>Test1</title>
+        <shop>DRM-free</shop>
+        <finished>No</finished>
+    </game>
+    <game>
+        <title>a</title>
+        <shop>DRM-free</shop>
+        <finished>Yes</finished>
+    </game>
+    <game>
+        <title>A</title>
+        <shop>DRM-free</shop>
+        <finished>No</finished>
     </game>
 </library>
