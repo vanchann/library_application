@@ -36,7 +36,7 @@ class Manager:
     """
     def show_menu(self):
         # Initialize local variables
-        avchoices = range(2)
+        avchoices = range(7)
         choice = None
 
         # Generate menu
@@ -45,7 +45,12 @@ class Manager:
             Utility.clear()
             # Display menu
             print("Available actions for library {}:".format(self._libtype.upper()))
-            print("1. Display item by unique value")
+            print("1. Display all items")
+            print("2. Display item by unique value")
+            print("3. Search for items")
+            print("4. Add new item")
+            print("5. Edit existing item")
+            print("6. Remove item")
             print("9. Storage utilities")
             print("0. Exit library")
             # Get user choice.
@@ -58,8 +63,18 @@ class Manager:
             if choice == 0:
                 return
             elif choice == 1:
+                pass
+            elif choice == 2:
                 Utility.clear()
                 self.show_element()
+            elif choice == 3:
+                pass
+            elif choice == 4:
+                pass
+            elif choice == 5:
+                pass
+            elif choice == 6:
+                pass
             elif choice == 9:
                 self.show_utility_menu()
             choice = None
