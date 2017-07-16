@@ -6,7 +6,7 @@ import sys
 from lxml import etree
 #from lxml import objectify
 from library.management import Manager
-from library.support.utility import Utility
+#from library.support.utility import Utility
 
 """
 Class: GameManager
@@ -22,9 +22,12 @@ class GameManager(Manager):
     Initializer
     """
     def __init__(self, storageroot, libfile, schemafile):
-        super().__init__(storageroot, libfile, schemafile, "game")
+        # Library type.
+        libtype = "game"
         # Allow sorting element tags.
-        self._sortingtags = ["title", "shop", "finished"]
+        sortingtags = ["title", "shop", "finished"]
+        # Call parent initializer.
+        super().__init__(storageroot, libfile, schemafile, libtype, sortingtags)
     # End of initializer
 
     # NOT implemented parent methods. Child class should implemented them, based on their storage settings.
@@ -211,46 +214,8 @@ class GameManager(Manager):
     Shows all elements.
     """
     def show_all_elements(self):
-        # Generate menu
-        choices = range(1, 4)
-        choice = None
-        while choice not in choices:
-            # Clear display.
-            Utility.clear()
-            # Display menu
-            print("Sort by:")
-            i = 0
-            for sorttag in self._sortingtags:
-                i += 1
-                print("{}. {}".format(i, sorttag))
-            # Get user choice.
-            try:
-                choice = int(input("Enter your choice [default 1]: "))
-            except ValueError:
-                choice = None
-        tag =  self._sortingtags[choice -1]
-
-        choices = range(1, 3)
-        choice = None
-        while choice not in choices:
-            # Clear display.
-            Utility.clear()
-            # Display menu
-            print("Order:")
-            print("1. Ascending")
-            print("2. Descending")
-            # Get user choice.
-            try:
-                choice = int(input("Enter your choice [default 1]: "))
-            except ValueError:
-                choice = None
-        if choice == 1:
-            order = True
-        else:
-            order = False
-
         # Get all elements
-        elements = self.get_all_elements(tag , order)
+        elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
         # Display results
         if isinstance(elements, int):
             print("Invalid storage file {}.".format(self._xmlfile))

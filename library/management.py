@@ -19,13 +19,14 @@ class Manager:
     """
     Initializer
     """
-    def __init__(self, storageroot, libfile, schemafile, libtype):
+    def __init__(self, storageroot, libfile, schemafile, libtype, sortingtags):
         super().__init__()
         # Initialize library variables.
         self._storageroot = storageroot
         self._libtype = libtype
         self._xmlfile = os.path.join(self._storageroot, self._libtype, libfile)
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
+        self._sortingtags = sortingtags
     # End of initializer
 
     # Implemented methods, whis may be called from a Manager instance object.
@@ -123,6 +124,67 @@ class Manager:
                 self.show_restore_schema()
             choice = None
     # End of method show_utility_menu.
+
+    """
+    Method: get_sorting_element
+
+    Gets a shortng elements tag.
+    """
+    def get_sorting_element(self):
+        # Generate menu
+        choices = range(1, len(self._sortingtags) + 1)
+        choice = None
+        while choice not in choices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Sort by:")
+            i = 0
+            for sorttag in self._sortingtags:
+                i += 1
+                print("{}. {}".format(i, sorttag))
+            # Get user choice.
+            try:
+                choice = input("Enter your choice [default 1]: ")
+                if choice == "":
+                    return self._sortingtags[0]
+                choice = int(choice)
+            except ValueError:
+                choice = None
+
+        return  self._sortingtags[choice - 1]
+    # End of method get_sorting_element
+
+    """
+    Method: get_sorting_order
+
+    Gets sorting order.
+    """
+    def get_sorting_order(self):
+        # Generate menu
+        choices = range(1, 3)
+        choice = None
+        while choice not in choices:
+            # Clear display.
+            Utility.clear()
+            # Display menu
+            print("Order:")
+            print("1. Ascending")
+            print("2. Descending")
+            # Get user choice.
+            try:
+                choice = input("Enter your choice [default 1]: ")
+                if choice == "":
+                    return True
+                choice = int(choice)
+            except ValueError:
+                choice = None
+
+        if choice == 1:
+            return True
+
+        return False
+    # End of method get_sorting_order
 
     """
     Method: show_validation
