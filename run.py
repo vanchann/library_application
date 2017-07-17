@@ -16,12 +16,18 @@ def main():
                 prog = "Ligrary Management",
                 description = "Library management program utilizing XML human readable storage. Submitting no arguments displays menu.",
                 epilog = "Created by Evangelos Channakis.")
-    confgroup = parser.add_mutually_exclusive_group()
-    confgroup.add_argument("-c", "--configure", action = "store_true", help = "create or reset configuration")
-    confgroup.add_argument("--validate-configuration", action = "store_true", help = "validate configuration")
-    confgroup.add_argument("-l", "--load", help = "load library of type LOAD")
+    excluegroup1 = parser.add_mutually_exclusive_group()
+    excluegroup1.add_argument("-c", "--configure", action = "store_true", help = "create or reset configuration.")
+    excluegroup1.add_argument("-l", "--load", help = "load library of type 'LOAD'.")
+    excluegroup1.add_argument("--validate-configuration", action = "store_true", help = "validate configuration.")
+
+    excluegroup2 = parser.add_mutually_exclusive_group()
+    excluegroup2.add_argument("--show", help = "show specific item of the loaded library.")
+    excluegroup2.add_argument("--show-all-by", help = "show all items of the loaded library sorted by 'SHOW_ALL_BY' element in ascending order.")
+
+    parser.add_argument("--reverse", action = "store_true", help = "sort items in reverse (descending) order.")
     parser.add_argument("--version", action = "version", version = "%(prog)s 0.1.0")
-    parser.add_argument("--show", help = "show specific item of the loaded library.")
+
     args = parser.parse_args()
     # Create Application object app.
     app = Application()
@@ -37,14 +43,20 @@ def main():
         return
     if args.load:
         print("Loading library of type {}...".format(args.load.lower()))
-        if args.show:
+        if args.show_all_by:
+            app.get_manager(args.load.lower()).show_all_elements(args.show_all_by, not args.reverse)
+        elif args.show:
             app.get_manager(args.load.lower()).show_element(args.show)
         else:
             app.load_library(args.load.lower())
         return
+    # Incorectly used options.
     if args.show:
         # There is no library loaded.
-        print("Argument --show, may only be used with argument --load.")
+        print("Argument --show, should be used with argument --load.")
+        return
+    if args.reverse:
+        print("Argument --reverse, should be used with argument --show-all-by.")
         return
     # Display menu
     app.show_menu()

@@ -64,7 +64,8 @@ class Manager:
             if choice == 0:
                 return
             elif choice == 1:
-                pass
+                Utility.clear()
+                self.show_all_elements()
             elif choice == 2:
                 Utility.clear()
                 self.show_element()
@@ -394,7 +395,7 @@ class Manager:
     Returns 0 on success and 2 in case of error.
     """
     def restore_schema(self):
-        raise NotImplementedError("Method get_all_elements should be implemented in child class.")
+        raise NotImplementedError("Method restore_schema should be implemented in child class.")
         """
         try:
             return 0
@@ -464,7 +465,7 @@ class Manager:
 
     Shows all elements.
     """
-    def show_all_elements(self):
+    def show_all_elements(self, value = None, ascending = True):
         raise NotImplementedError("Method show_all_elements should be implemented in child class.")
     # End of method show_all_elements.
 
