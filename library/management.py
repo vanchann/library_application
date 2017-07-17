@@ -473,7 +473,7 @@ class Manager:
 
     Shows an element.
     """
-    def show_element(self):
+    def show_element(self, value = None):
         raise NotImplementedError("Method show_element should be implemented in child class.")
     # End of method show_element.
 

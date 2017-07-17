@@ -241,11 +241,16 @@ class GameManager(Manager):
     Method: show_element
 
     Shows an element.
+    Value parameter may be used to pass the title to search programmatically.
     """
-    def show_element(self):
-        # Get user input.
-        print("Exact match will be made!")
-        title = input("Enter the title of the game: ")
+    def show_element(self, value = None):
+        if value is None:
+            # Get user input.
+            print("Exact match will be made!")
+            title = input("Enter the title of the game: ")
+        else:
+            # set title using value parameter
+            title = value
         # Get element.
         element = self.get_element(title)
         print()
@@ -266,7 +271,9 @@ class GameManager(Manager):
                             depth = 8
                             print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
         print()
-        input("Press 'Enter' to return to menu: ")
+        # Pause if the method has called without a value.
+        if value is None:
+            input("Press 'Enter' to return to menu: ")
     # End of method show_element.
 
     """

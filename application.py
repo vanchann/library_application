@@ -42,11 +42,11 @@ class Application:
     # End of method __invalidconfexit,
 
     """
-    Method: load_library
+    Method: get_manager
 
-    Loads the library of the specified type.
+    Gets a library manager object.
     """
-    def load_library(self, libtype):
+    def get_manager(self, libtype):
         # Configuration vallidity check.
         self.__invalidconfexit()
         # Chech if library type is supported.
@@ -66,10 +66,24 @@ class Application:
         # Create library manager for specific library type.
         if libtype == "game":
             manager = GameManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
-            manager.show_menu()
         else:
             print("Not yet inmplemented library type {}.".format(libtype))
+            return None
+        # Return managet object.
+        return manager
+    # End of method get_manager.
+
+    """
+    Method: load_library
+
+    Loads the library of the specified type.
+    """
+    def load_library(self, libtype):
+        manager = self.get_manager(libtype)
+        if manager is None:
             input("Press 'Enter' to return to menu: ")
+        else:
+            manager.show_menu()
     # End of method load_library.
 
     """
