@@ -213,13 +213,13 @@ class GameManager(Manager):
 
     Shows all elements.
     """
-    def show_all_elements(self, value = None, ascending = True):
+    def show_all_elements(self, value = None, ascending = True, menu = None):
         # Get all elements
-        if value is None:
+        if menu is None:
+            elements = self.get_all_elements(value, ascending)
+        else:
             # Get user input.
             elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
-        else:
-            elements = self.get_all_elements(value, ascending)
         # Display results
         if isinstance(elements, int):
             print("Invalid storage file {}.".format(self._xmlfile))
@@ -239,7 +239,7 @@ class GameManager(Manager):
                                 print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
         print()
         # Pause if the method has been called without a value.
-        if value is None:
+        if menu is not None:
             input("Press 'Enter' to return to menu: ")
     # End of method show_all_elements.
 

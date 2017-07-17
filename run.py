@@ -23,6 +23,7 @@ def main():
 
     excluegroup2 = parser.add_mutually_exclusive_group()
     excluegroup2.add_argument("--show", help = "show specific item of the loaded library.")
+    excluegroup2.add_argument("--show-all", action = "store_true", help = "show all items of the loaded library sorted by the default element in ascending order.")
     excluegroup2.add_argument("--show-all-by", help = "show all items of the loaded library sorted by 'SHOW_ALL_BY' element in ascending order.")
 
     parser.add_argument("--reverse", action = "store_true", help = "sort items in reverse (descending) order.")
@@ -43,7 +44,9 @@ def main():
         return
     if args.load:
         print("Loading library of type {}...".format(args.load.lower()))
-        if args.show_all_by:
+        if args.show_all:
+            app.get_manager(args.load.lower()).show_all_elements(ascending = not args.reverse)
+        elif args.show_all_by:
             app.get_manager(args.load.lower()).show_all_elements(args.show_all_by, not args.reverse)
         elif args.show:
             app.get_manager(args.load.lower()).show_element(args.show)
@@ -51,12 +54,20 @@ def main():
             app.load_library(args.load.lower())
         return
     # Incorectly used options.
+    if args.show_all:
+        # There is no library loaded.
+        print("Argument --show_all, should be used with argument --load.")
+        return
+    if args.show_all_by:
+        # There is no library loaded.
+        print("Argument --show_all_by, should be used with argument --load.")
+        return
     if args.show:
         # There is no library loaded.
         print("Argument --show, should be used with argument --load.")
         return
     if args.reverse:
-        print("Argument --reverse, should be used with argument --show-all-by.")
+        print("Argument --reverse, should be used with arguments --show-all and --show-all-by.")
         return
     # Display menu
     app.show_menu()

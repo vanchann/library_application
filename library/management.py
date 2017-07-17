@@ -65,7 +65,7 @@ class Manager:
                 return
             elif choice == 1:
                 Utility.clear()
-                self.show_all_elements()
+                self.show_all_elements(menu = True)
             elif choice == 2:
                 Utility.clear()
                 self.show_element()
@@ -465,7 +465,7 @@ class Manager:
 
     Shows all elements.
     """
-    def show_all_elements(self, value = None, ascending = True):
+    def show_all_elements(self, value = None, ascending = True, menu = None):
         raise NotImplementedError("Method show_all_elements should be implemented in child class.")
     # End of method show_all_elements.
 
