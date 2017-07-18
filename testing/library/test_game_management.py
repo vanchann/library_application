@@ -38,7 +38,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements_none_element without passing in an element.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements_none_element(self):
         self.assertIsNone(self.manager.search_elements("", "Test"))
     # End of method test_search_elements_none_element.
@@ -46,7 +46,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements_no_value without passing an existing value.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements_no_value(self):
         self.assertIsNone(self.manager.search_elements("title", "_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_search_elements_no_value.
@@ -54,7 +54,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements(self):
         self.assertIsInstance(self.manager.search_elements("finished", "e"), list)
     # End of method test_search_elements.
@@ -62,7 +62,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function show_search_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_show_search_elements(self):
         self.manager.show_search_elements("finished", "e")
     # End of method show_search_elements.
@@ -70,7 +70,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function get_all_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_get_all_elements_default_order(self):
         self.assertIsInstance(self.manager.get_all_elements(), list)
     # End of method test_get_all_elements_default_order.
@@ -78,7 +78,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function show_all_elements.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_show_all_elements(self):
         self.manager.show_all_elements()
     # End of method test_show_all_elements.
@@ -98,6 +98,32 @@ class TestGameManager(unittest.TestCase):
     def test_get_element_existent(self):
         self.assertIsInstance(self.manager.get_element("Test"), _Element)
     # End of method test_get_element_existent.
+
+    """
+    Test function add_element_invalid_dict.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_invalid_dict(self):
+        self.assertEqual(self.manager.add_element({"titlE": "Dict", "shop": "Free", "finished": "No"}), 1)
+    # End of method test_add_element_invalid_dict.
+
+    """
+    Test function add_element without installer.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_no_installer(self):
+        self.assertEqual(self.manager.add_element({"title": "Dict", "shop": "Free", "finished": "No"}), 0)
+    # End of method test_add_element_no_installer.
+
+    """
+    Test function add_element with installer.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_with_installer(self):
+        game = {"title": "Dict installer", "shop": "Free", "finished": "No",
+                "installer": [{"system": "Mac", "filename": ["file1", "file2"]}]}
+        self.assertEqual(self.manager.add_element(game), 0)
+    # End of method test_add_element_with_installer.
 
     """
     Test function show_element.

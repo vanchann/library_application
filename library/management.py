@@ -438,7 +438,7 @@ class Manager:
 
     Adds an element.
     """
-    def add_element(self, element):
+    def add_element(self, elementdict):
         raise NotImplementedError("Method add_element should be implemented in child class.")
     # End of method add_element.
 

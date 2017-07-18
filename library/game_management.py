@@ -6,7 +6,7 @@ import sys
 from lxml import etree
 #from lxml import objectify
 from library.management import Manager
-#from library.support.utility import Utility
+from library.support.utility import Utility
 
 """
 Class: GameManager
@@ -201,12 +201,72 @@ class GameManager(Manager):
     # End of method get_element.
 
     """
+    Method: _add_element_to_tree
+
+    Adds new element to tree and save to file file.
+    """
+    def _add_element_to_tree(self, element):
+            # Create xml tree.
+            tree = etree.parse(self._xmlfile)
+            # Get a list of all elements.
+            tnodes = tree.xpath("/library/{}".format(self._libtype))
+            # Append to lis.
+            tnodes.append(element)
+            # Sort elements list by title.
+            index = self._sortingtags.index("title")
+            tnodes.sort(key = lambda element: element[index].text.title())
+            # Create the xml tree.
+            root = etree.XML("""
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="{}"></library>
+            """.format(os.path.basename(self._xsdfile)))
+            for node in tnodes:
+                root.append(node)
+            # Generate new tree.
+            xmlout = etree.ElementTree(root)
+            # Validate tree.
+            if Utility.validate_tree(self._xsdfile, xmlout) != 0:
+                return 3
+            # Write to file.
+            try:
+                xmlout.write(self._xmlfile, xml_declaration=True, encoding="UTF-8", pretty_print=True)
+                return 0
+            except OSError:
+                return 2
+    # End of method _write_tree.
+
+    """
     Method: add_element
 
     Adds an element.
     """
-    def add_element(self, element):
-        raise NotImplementedError("Method add_element should be implemented in child class.")
+    def add_element(self, elementdict):
+        # Create new element from elementdict.
+        element = etree.Element(self._libtype)
+        try:
+            subelement = etree.SubElement(element, "title")
+            subelement.text = elementdict["title"]
+            subelement = etree.SubElement(element, "shop")
+            subelement.text = elementdict["shop"]
+            subelement = etree.SubElement(element, "finished")
+            subelement.text = elementdict["finished"]
+
+            # Get installer list.
+            if "installer" in elementdict:
+                for installer in elementdict["installer"]:
+                    installertag = etree.SubElement(element, "installer")
+                    subelement = etree.SubElement(installertag, "system")
+                    subelement.text = installer["system"]
+                    if "lastupdated" in installer:
+                        subelement = etree.SubElement(installertag, "lastupdated")
+                        subelement.text = installer["lastupdated"]
+                    # Get filename list
+                    for filename in installer["filename"]:
+                        subelement = etree.SubElement(installertag, "filename")
+                        subelement.text = filename
+            # Write to file.
+            return self._add_element_to_tree(element)
+        except KeyError:
+            return 1
     # End of method add_element.
 
     """

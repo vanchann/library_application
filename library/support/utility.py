@@ -60,4 +60,26 @@ class Utility:
         except FileNotFoundError:
             return 2
     # End of static method validate.
+
+    """
+    Method: validate_tree
+
+    Validates XML tree given an XSD schema.
+    Returns 0 if validates, 1 if not and 2 in case of error.
+    """
+    @staticmethod
+    def validate_tree(schemafile, tree):
+        try:
+            with open(schemafile, 'r') as xsdfile:
+                # Create schema object.
+                xmlschema_doc = etree.parse(xsdfile)
+                xmlschema = etree.XMLSchema(xmlschema_doc)
+                # Validate tree.
+                if xmlschema.validate(tree):
+                    return 0
+                else:
+                    return 1
+        except FileNotFoundError:
+            return 2
+    # End of static method validate_tree.
 # End of class Utility.
