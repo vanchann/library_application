@@ -346,26 +346,29 @@ class GameManager(Manager):
 
     Shows elements of a search result.
     """
-    def show_search_elements(self, element = None, value = None, ascending = True, menu = None):
+    def show_search_elements(self, element = None, value = None, ascending = True):
+        menu = None
         # Get all elements
-        if menu is None:
-            elements = self.search_elements(element, value, ascending)
-        else:
+        if element is None:
+            menu = True
             # Get user input.
             element = self.get_sorting_element()
             value = input("Enter a value to search for: ")
             elements = self.search_elements(element, value, self.get_sorting_order())
+            Utility.clear()
+        else:
+            elements = self.search_elements(element, value, ascending)
         # Display results
         if isinstance(elements, int):
             print("Invalid storage file {}.".format(self._xmlfile))
         elif elements is None:
-            print("The library is empty.")
+            print("No item with '{}' containing '{}' has benn found.".format(element.title(), value))
         else:
             # Show table of results.
             self._show_table(elements)
         print()
         # Pause if the method has been called without an element.
-        if menu is not None:
+        if menu:
             input("Press 'Enter' to return to menu: ")
     # End of method show_search_elements.
 
@@ -381,6 +384,7 @@ class GameManager(Manager):
         else:
             # Get user input.
             elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
+            Utility.clear()
         # Display results
         if isinstance(elements, int):
             print("Invalid storage file {}.".format(self._xmlfile))
@@ -433,6 +437,71 @@ class GameManager(Manager):
         if value is None:
             input("Press 'Enter' to return to menu: ")
     # End of method show_element.
+
+    """
+    Method: show_add_element
+
+    Shows messages about new element's addition.
+    """
+    def show_add_element(self, element = None):
+        menu = None
+        # Get the element's title from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+
+            # TO ADD MENU
+
+        # Add item.
+        if self.add_element(element) == 0:
+            print("The item {} has been added successfully.".format(element))
+        else:
+            print("The item {} has not been added.".format(element))
+
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_add_element.
+
+    """
+    Method: show_edit_element
+
+    Shows element's editing messages.
+    """
+    def show_edit_element(self, element = None):
+        menu = None
+
+        # Get the element's title from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+
+            # TO ADD MENU
+
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_edit_element.
+
+    """
+    Method: show_remove_element
+
+    Shows messages about element's removal.
+    """
+    def show_remove_element(self, element = None):
+        menu = None
+        # Get the element's title from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+            element = input("Enter the title of the item to be removed: ")
+        # Remove item.
+        if self.remove_element(element) == 0:
+            print("The item {} has been removed successfully.".format(element))
+        else:
+            print("The item {} has not been removed.".format(element))
+
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_remove_element.
 
     """
     Method: show_element_editor

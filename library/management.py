@@ -71,13 +71,13 @@ class Manager:
                 self.show_element()
             elif choice == 3:
                 Utility.clear()
-                self.show_search_elements(menu = True)
+                self.show_search_elements()
             elif choice == 4:
-                pass
+                self.show_add_element()
             elif choice == 5:
-                pass
+                self.show_edit_element()
             elif choice == 6:
-                pass
+                self.show_remove_element()
             elif choice == 9:
                 self.show_utility_menu()
             choice = None
@@ -466,7 +466,7 @@ class Manager:
 
     Shows elements of a search result.
     """
-    def show_search_elements(self, element = None, value = None, ascending = True, menu = None):
+    def show_search_elements(self, element = None, value = None, ascending = True):
         raise NotImplementedError("Method show_search_elements should be implemented in child class.")
     # End of method show_search_elements.
 
@@ -487,6 +487,33 @@ class Manager:
     def show_element(self, value = None):
         raise NotImplementedError("Method show_element should be implemented in child class.")
     # End of method show_element.
+
+    """
+    Method: show_add_element
+
+    Shows messages about new element's addition.
+    """
+    def show_add_element(self, element = None):
+        raise NotImplementedError("Method show_add_element should be implemented in child class.")
+    # End of method show_add_element.
+
+    """
+    Method: show_edit_element
+
+    Shows element's editing messages.
+    """
+    def show_edit_element(self, element = None):
+        raise NotImplementedError("Method show_edit_element should be implemented in child class.")
+    # End of method show_edit_element.
+
+    """
+    Method: show_remove_element
+
+    Shows messages about element's removal.
+    """
+    def show_remove_element(self, element = None):
+        raise NotImplementedError("Method show_remove_element should be implemented in child class.")
+    # End of method show_remove_element.
 
     """
     Method: show_element_editor

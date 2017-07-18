@@ -61,9 +61,9 @@ def main():
             else:
                 print("No value to search for. Please use argument --value.")
         elif args.add:
-            print(app.get_manager(args.load.lower()).add_element(ast.literal_eval(args.add)))
+            app.get_manager(args.load.lower()).show_add_element(ast.literal_eval(args.add))
         elif args.remove:
-            print(print(app.get_manager(args.load.lower()).remove_element(args.remove))
+            app.get_manager(args.load.lower()).show_remove_element(args.remove)
         else:
             app.load_library(args.load.lower())
         return
