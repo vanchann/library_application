@@ -121,8 +121,28 @@ class GameManager(Manager):
 
     Search for elements containing a given value.
     """
-    def search_elements(self, element, value):
-        raise NotImplementedError("Method get_element should be implemented in child class.")
+    def search_elements(self, element, value, ascending = True):
+        # Validate storage.
+        validate = self.validate()
+        if validate != 0:
+            return validate
+
+        if element not in self._sortingtags:
+            return None
+
+        # Create xml tree.
+        tree = etree.parse(self._xmlfile)
+        # Search for elements containing the value.
+        tnodes = tree.xpath("/library/{0}/{1}[contains(., '{2}')]/ancestor::{0}".format(self._libtype, element, value))
+
+        # Return elements if exist or none if list is empty.
+        if tnodes:
+            # Sort the list.
+            index = self._sortingtags.index(element)
+            tnodes.sort(key = lambda element: element[index].text.title(), reverse = not ascending)
+            return tnodes
+        else:
+            return None
     # End of method search_elements.
 
     # Element manipulation methods.
@@ -207,16 +227,74 @@ class GameManager(Manager):
         raise NotImplementedError("Method edit_element should be implemented in child class.")
     # End of method edit_element.
 
+    """
+    Method: _show_table
+
+    Shows table of elements.
+    """
+    def _show_table(self, elements):
+        # Calculate max column widths.
+        titlewidth = 5
+        shopwidth = 4
+        for item in elements:
+            # Title width.
+            width = len(item[0].text.strip())
+            if titlewidth < width:
+                titlewidth = width
+            # Shop width.
+            width = len(item[1].text.strip())
+            if shopwidth < width:
+                shopwidth = width
+        # Display header.
+        print("{:{}} | {:{}} | {:8} | {}".format(self._sortingtags[0].title(), titlewidth, self._sortingtags[1].title(), shopwidth, self._sortingtags[2].title(), "System"))
+        print("{}-|-{}-|-{}-|-{}".format("-" * titlewidth, "-" * shopwidth, "-" * 8, "-" * 6))
+        # Iterate though result as needed and display game information.
+        for item in elements:
+            print("{:{}} | {:{}} | {:8} | ".format(item[0].text.strip(), titlewidth, item[1].text.strip(), shopwidth, item[2].text.strip()), end = "")
+            for subitem in item:
+                if subitem.tag == "installer":
+                    print("{} ".format(subitem[0].text.strip()), end = "")
+            print()
+    # End of method _show_table.
+
     # Display methods.
+    """
+    Method: show_search_elements
+
+    Shows elements of a search result.
+    """
+    def show_search_elements(self, element = None, value = None, ascending = True, menu = None):
+        # Get all elements
+        if menu is None:
+            elements = self.search_elements(element, value, ascending)
+        else:
+            # Get user input.
+            element = self.get_sorting_element()
+            value = input("Enter a value to search for: ")
+            elements = self.search_elements(element, value, self.get_sorting_order())
+        # Display results
+        if isinstance(elements, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        elif elements is None:
+            print("The library is empty.")
+        else:
+            # Show table of results.
+            self._show_table(elements)
+        print()
+        # Pause if the method has been called without an element.
+        if menu is not None:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_search_elements.
+
     """
     Method: show_all_elements
 
     Shows all elements.
     """
-    def show_all_elements(self, value = None, ascending = True, menu = None):
+    def show_all_elements(self, element = None, ascending = True, menu = None):
         # Get all elements
         if menu is None:
-            elements = self.get_all_elements(value, ascending)
+            elements = self.get_all_elements(element, ascending)
         else:
             # Get user input.
             elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
@@ -226,19 +304,10 @@ class GameManager(Manager):
         elif elements is None:
             print("The library is empty.")
         else:
-            # Iterate though result as needed and display game information.
-            for element in elements:
-                print("{}:".format(element.tag.title()))
-                for item in element.iterchildren():
-                    if item.text is not None:
-                        depth = 4
-                        print("{}{}: {}".format(" " * depth, item.tag.title(), item.text.strip()))
-                        for subitem in item.iterchildren():
-                            if subitem.text is not None:
-                                depth = 8
-                                print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
+            # Show table of results.
+            self._show_table(elements)
         print()
-        # Pause if the method has been called without a value.
+        # Pause if the method has been called without an element.
         if menu is not None:
             input("Press 'Enter' to return to menu: ")
     # End of method show_all_elements.

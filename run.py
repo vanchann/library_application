@@ -22,11 +22,13 @@ def main():
     excluegroup1.add_argument("--validate-configuration", action = "store_true", help = "validate configuration.")
 
     excluegroup2 = parser.add_mutually_exclusive_group()
+    excluegroup2.add_argument("--search", help = "search in elements 'SEARCH' of the loaded library and show results in ascending order.")
     excluegroup2.add_argument("--show", help = "show specific item of the loaded library.")
     excluegroup2.add_argument("--show-all", action = "store_true", help = "show all items of the loaded library sorted by the default element in ascending order.")
     excluegroup2.add_argument("--show-all-by", help = "show all items of the loaded library sorted by 'SHOW_ALL_BY' element in ascending order.")
 
     parser.add_argument("--reverse", action = "store_true", help = "sort items in reverse (descending) order.")
+    parser.add_argument("--value", help = "the 'VALUE' to search for.")
     parser.add_argument("--version", action = "version", version = "%(prog)s 0.1.0")
 
     args = parser.parse_args()
@@ -43,13 +45,19 @@ def main():
         app.validate_configuration()
         return
     if args.load:
-        print("Loading library of type {}...".format(args.load.lower()))
+        # print("Loading library of type {}...".format(args.load.lower()))
         if args.show_all:
             app.get_manager(args.load.lower()).show_all_elements(ascending = not args.reverse)
         elif args.show_all_by:
             app.get_manager(args.load.lower()).show_all_elements(args.show_all_by, not args.reverse)
         elif args.show:
             app.get_manager(args.load.lower()).show_element(args.show)
+        elif args.search:
+            if args.value:
+                app.get_manager(args.load.lower()).show_search_elements(args.search, args.value, not args.reverse)
+            else:
+                print("No value to search for. Please use argument --value.")
+                return
         else:
             app.load_library(args.load.lower())
         return
@@ -66,8 +74,15 @@ def main():
         # There is no library loaded.
         print("Argument --show, should be used with argument --load.")
         return
+    if args.search:
+        # There is no library loaded.
+        print("Argument --search, should be used with argument --load.")
+        return
+    if args.value:
+        print("Argument --value, should be used with argument --search.")
+        return
     if args.reverse:
-        print("Argument --reverse, should be used with arguments --show-all and --show-all-by.")
+        print("Argument --reverse, should be used with arguments --search, --show-all and --show-all-by.")
         return
     # Display menu
     app.show_menu()

@@ -24,6 +24,7 @@ class TestGameManager(unittest.TestCase):
     def setUp(self):
         self.storagepath = os.path.abspath(__file__).split("/testing/library/test_game_management.py")[0]
         self.storagepath = os.path.join(self.storagepath, "storage")
+        self.manager = GameManager(self.storagepath, "library.xml", "library.xsd")
     # End of method setUp
 
     """
@@ -31,17 +32,47 @@ class TestGameManager(unittest.TestCase):
     """
     @unittest.skip("Skipped.")
     def test_validate(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        self.assertEqual(manager.validate(), 0)
+        self.assertEqual(self.manager.validate(), 0)
     # End of method test_validate.
+
+    """
+    Test function search_elements_none_element without passing in an element.
+    """
+    #@unittest.skip("Skipped.")
+    def test_search_elements_none_element(self):
+        self.assertIsNone(self.manager.search_elements("", "Test"))
+    # End of method test_search_elements_none_element.
+
+    """
+    Test function search_elements_no_value without passing an existing value.
+    """
+    #@unittest.skip("Skipped.")
+    def test_search_elements_no_value(self):
+        self.assertIsNone(self.manager.search_elements("title", "_/T\_ NOT EXISTS TEST _/T\_"))
+    # End of method test_search_elements_no_value.
+
+    """
+    Test function search_elements using default order.
+    """
+    #@unittest.skip("Skipped.")
+    def test_search_elements(self):
+        self.assertIsInstance(self.manager.search_elements("finished", "e"), list)
+    # End of method test_search_elements.
+
+    """
+    Test function show_search_elements using default order.
+    """
+    #@unittest.skip("Skipped.")
+    def test_show_search_elements(self):
+        self.manager.show_search_elements("finished", "e")
+    # End of method show_search_elements.
 
     """
     Test function get_all_elements using default order.
     """
     #@unittest.skip("Skipped.")
     def test_get_all_elements_default_order(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        self.assertIsInstance(manager.get_all_elements(), list)
+        self.assertIsInstance(self.manager.get_all_elements(), list)
     # End of method test_get_all_elements_default_order.
 
     """
@@ -49,8 +80,7 @@ class TestGameManager(unittest.TestCase):
     """
     #@unittest.skip("Skipped.")
     def test_show_all_elements(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        manager.show_all_elements()
+        self.manager.show_all_elements()
     # End of method test_show_all_elements.
 
     """
@@ -58,8 +88,7 @@ class TestGameManager(unittest.TestCase):
     """
     @unittest.skip("Skipped.")
     def test_get_element_non_existent(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        self.assertIsNone(manager.get_element("_/T\_ NOT EXISTS TEST _/T\_"))
+        self.assertIsNone(self.manager.get_element("_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_get_element_non_existent.
 
     """
@@ -67,8 +96,7 @@ class TestGameManager(unittest.TestCase):
     """
     @unittest.skip("Skipped.")
     def test_get_element_existent(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        self.assertIsInstance(manager.get_element("Test"), _Element)
+        self.assertIsInstance(self.manager.get_element("Test"), _Element)
     # End of method test_get_element_existent.
 
     """
@@ -76,8 +104,7 @@ class TestGameManager(unittest.TestCase):
     """
     @unittest.skip("Skipped.")
     def test_show_element(self):
-        manager = GameManager(self.storagepath, "library.xml", "library.xsd")
-        manager.show_element()
+        self.manager.show_element()
     # End of method test_show_element.
 # End of class TestRunModule
 

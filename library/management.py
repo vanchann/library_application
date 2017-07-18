@@ -70,7 +70,8 @@ class Manager:
                 Utility.clear()
                 self.show_element()
             elif choice == 3:
-                pass
+                Utility.clear()
+                self.show_search_elements(menu = True)
             elif choice == 4:
                 pass
             elif choice == 5:
@@ -139,7 +140,7 @@ class Manager:
             # Clear display.
             Utility.clear()
             # Display menu
-            print("Sort by:")
+            print("Element [to sort by, search for, etc]:")
             i = 0
             for sorttag in self._sortingtags:
                 i += 1
@@ -409,8 +410,8 @@ class Manager:
 
     Search for elements containing a given value.
     """
-    def search_elements(self, element, value):
-        raise NotImplementedError("Method get_element should be implemented in child class.")
+    def search_elements(self, element, value, ascending = True):
+        raise NotImplementedError("Method search_elements should be implemented in child class.")
     # End of method search_elements.
 
     # Element manipulation methods.
@@ -461,11 +462,20 @@ class Manager:
 
     # Display methods.
     """
+    Method: show_search_elements
+
+    Shows elements of a search result.
+    """
+    def show_search_elements(self, element = None, value = None, ascending = True, menu = None):
+        raise NotImplementedError("Method show_search_elements should be implemented in child class.")
+    # End of method show_search_elements.
+
+    """
     Method: show_all_elements
 
     Shows all elements.
     """
-    def show_all_elements(self, value = None, ascending = True, menu = None):
+    def show_all_elements(self, element = None, ascending = True, menu = None):
         raise NotImplementedError("Method show_all_elements should be implemented in child class.")
     # End of method show_all_elements.
 
