@@ -201,25 +201,16 @@ class GameManager(Manager):
     # End of method get_element.
 
     """
-    Method: _add_element_to_tree
+    Method: _write_tree
 
-    Adds new element to tree and save to file file.
+    Adds nodes to tree and save to file file.
     """
-    def _add_element_to_tree(self, element):
-            # Create xml tree.
-            tree = etree.parse(self._xmlfile)
-            # Get a list of all elements.
-            tnodes = tree.xpath("/library/{}".format(self._libtype))
-            # Append to lis.
-            tnodes.append(element)
-            # Sort elements list by title.
-            index = self._sortingtags.index("title")
-            tnodes.sort(key = lambda element: element[index].text.title())
+    def _write_tree(self, nodes):
             # Create the xml tree.
             root = etree.XML("""
 <library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="{}"></library>
             """.format(os.path.basename(self._xsdfile)))
-            for node in tnodes:
+            for node in nodes:
                 root.append(node)
             # Generate new tree.
             xmlout = etree.ElementTree(root)
@@ -233,6 +224,25 @@ class GameManager(Manager):
             except OSError:
                 return 2
     # End of method _write_tree.
+
+    """
+    Method: _add_element_to_tree
+
+    Adds new element to tree nodes.
+    """
+    def _add_element_to_tree(self, element):
+            # Create xml tree.
+            tree = etree.parse(self._xmlfile)
+            # Get a list of all elements.
+            nodes = tree.xpath("/library/{}".format(self._libtype))
+            # Append to lis.
+            nodes.append(element)
+            # Sort elements list by title.
+            index = self._sortingtags.index("title")
+            nodes.sort(key = lambda element: element[index].text.title())
+            # Write to file.
+            return self._write_tree(nodes)
+    # End of method _add_element_to_tree.
 
     """
     Method: add_element
@@ -275,7 +285,20 @@ class GameManager(Manager):
     Removes an element.
     """
     def remove_element(self, element):
-        raise NotImplementedError("Method remove_element should be implemented in child class.")
+        # Create xml tree.
+        tree = etree.parse(self._xmlfile)
+        # Get a list of all elements.
+        nodes = tree.xpath("/library/{}".format(self._libtype))
+        # Find the element to remove using exact match.
+        node = tree.xpath("/library/{0}/title[text()='{1}']/ancestor::{0}".format(self._libtype, element))
+        if not node:
+            return 1
+        nodes.remove(node[0])
+        # Remove element's node.
+        #nodes = node.getparent()
+        #nodes.remove(node)
+        # Write to file.
+        return self._write_tree(nodes)
     # End of method remove_element.
 
     """
@@ -416,7 +439,7 @@ class GameManager(Manager):
 
     Shows the element editor.
     """
-    def show_element_editor(self, element = None):
+    def show_element_editor(self, action = None, element = None):
         raise NotImplementedError("Method show_element_editor should be implemented in child class.")
     # End of method show_element_editor.
 # End of class GameManager.

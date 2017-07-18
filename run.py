@@ -2,6 +2,7 @@
 
 # Imports.
 import argparse
+import ast
 from application import Application
 
 # The following section contains code to execute when script is run from the command line.
@@ -22,6 +23,8 @@ def main():
     excluegroup1.add_argument("--validate-configuration", action = "store_true", help = "validate configuration.")
 
     excluegroup2 = parser.add_mutually_exclusive_group()
+    excluegroup2.add_argument("--add", help = "add item 'ADD' to the loaded library.")
+    excluegroup2.add_argument("--remove", help = "remove item 'REMOVE' from the loaded library.")
     excluegroup2.add_argument("--search", help = "search in elements 'SEARCH' of the loaded library and show results in ascending order.")
     excluegroup2.add_argument("--show", help = "show specific item of the loaded library.")
     excluegroup2.add_argument("--show-all", action = "store_true", help = "show all items of the loaded library sorted by the default element in ascending order.")
@@ -57,11 +60,22 @@ def main():
                 app.get_manager(args.load.lower()).show_search_elements(args.search, args.value, not args.reverse)
             else:
                 print("No value to search for. Please use argument --value.")
-                return
+        elif args.add:
+            print(app.get_manager(args.load.lower()).add_element(ast.literal_eval(args.add)))
+        elif args.remove:
+            print(print(app.get_manager(args.load.lower()).remove_element(args.remove))
         else:
             app.load_library(args.load.lower())
         return
     # Incorectly used options.
+    if args.add:
+        # There is no library loaded.
+        print("Argument --add, should be used with argument --load.")
+        return
+    if args.remove:
+        # There is no library loaded.
+        print("Argument --remove, should be used with argument --load.")
+        return
     if args.show_all:
         # There is no library loaded.
         print("Argument --show_all, should be used with argument --load.")

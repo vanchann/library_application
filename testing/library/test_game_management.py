@@ -110,7 +110,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function add_element without installer.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_add_element_no_installer(self):
         self.assertEqual(self.manager.add_element({"title": "Dict", "shop": "Free", "finished": "No"}), 0)
     # End of method test_add_element_no_installer.
@@ -118,12 +118,20 @@ class TestGameManager(unittest.TestCase):
     """
     Test function add_element with installer.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_add_element_with_installer(self):
         game = {"title": "Dict installer", "shop": "Free", "finished": "No",
                 "installer": [{"system": "Mac", "filename": ["file1", "file2"]}]}
         self.assertEqual(self.manager.add_element(game), 0)
     # End of method test_add_element_with_installer.
+
+    """
+    Test function remove_element.
+    """
+    @unittest.skip("Skipped.")
+    def test_remove_element(self):
+        self.assertEqual(self.manager.remove_element("Dict installer"), 0)
+    # End of method test_remove_element.
 
     """
     Test function show_element.

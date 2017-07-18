@@ -493,7 +493,7 @@ class Manager:
 
     Shows the element editor.
     """
-    def show_element_editor(self, element = None):
+    def show_element_editor(self, action = None, element = None):
         raise NotImplementedError("Method show_element_editor should be implemented in child class.")
     # End of method show_element_editor.
 # End of class Manager.
