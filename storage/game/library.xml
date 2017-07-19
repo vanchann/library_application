@@ -35,4 +35,17 @@
         <shop>DRM-free</shop>
         <finished>No</finished>
     </game>
+    <game>
+        <title>Nofile</title>
+        <shop>Free</shop>
+        <finished>Yes</finished>
+        <installer>
+            <system>Other</system>
+        </installer>
+        <installer>
+            <system>Linux</system>
+            <filename>lin_file_1</filename>
+            <filename>lin_file_2</filename>
+        </installer>
+    </game>
 </library>

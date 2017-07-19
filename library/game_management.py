@@ -76,7 +76,7 @@ class GameManager(Manager):
         <xs:sequence>
             <xs:element ref="system"/>
             <xs:element ref="lastupdated" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="filename" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element ref="filename" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 </xs:element>
@@ -270,9 +270,10 @@ class GameManager(Manager):
                         subelement = etree.SubElement(installertag, "lastupdated")
                         subelement.text = installer["lastupdated"]
                     # Get filename list
-                    for filename in installer["filename"]:
-                        subelement = etree.SubElement(installertag, "filename")
-                        subelement.text = filename
+                    if "filename" in installer:
+                        for filename in installer["filename"]:
+                            subelement = etree.SubElement(installertag, "filename")
+                            subelement.text = filename
             # Write to file.
             return self._add_element_to_tree(element)
         except KeyError:
@@ -502,6 +503,24 @@ class GameManager(Manager):
         if menu:
             input("Press 'Enter' to return to menu: ")
     # End of method show_remove_element.
+
+    """
+    Method: _generate_game
+
+    Generate game python dictionaty.
+    """
+    def _generate_game(self, game = None):
+        raise NotImplementedError("Method _generate_game should be implemented in child class.")
+    # End of method _generate_game.
+
+    """
+    Method: _generate_installer
+
+    Generate installer python dictionaty.
+    """
+    def _generate_installer(self, installer = None):
+        raise NotImplementedError("Method _generate_installer should be implemented in child class.")
+    # End of method _generate_installer.
 
     """
     Method: show_element_editor
