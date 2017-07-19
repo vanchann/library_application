@@ -367,9 +367,9 @@ class GameManager(Manager):
         else:
             # Show table of results.
             self._show_table(elements)
-        print()
         # Pause if the method has been called without an element.
         if menu:
+            print()
             input("Press 'Enter' to return to menu: ")
     # End of method show_search_elements.
 
@@ -394,9 +394,9 @@ class GameManager(Manager):
         else:
             # Show table of results.
             self._show_table(elements)
-        print()
         # Pause if the method has been called without an element.
         if menu is not None:
+            print()
             input("Press 'Enter' to return to menu: ")
     # End of method show_all_elements.
 
@@ -411,12 +411,12 @@ class GameManager(Manager):
             # Get user input.
             print("Exact match will be made!")
             title = input("Enter the title of the game: ")
+            print()
         else:
             # set title using value parameter
             title = value
         # Get element.
         element = self.get_element(title)
-        print()
         # Display result.
         if isinstance(element, int):
             print("Invalid storage file {}.".format(self._xmlfile))
@@ -433,9 +433,9 @@ class GameManager(Manager):
                         if subitem.text is not None:
                             depth = 8
                             print("{}{}: {}".format(" " * depth, subitem.tag.title(), subitem.text.strip()))
-        print()
         # Pause if the method has been called without a value.
         if value is None:
+            print()
             input("Press 'Enter' to return to menu: ")
     # End of method show_element.
 
