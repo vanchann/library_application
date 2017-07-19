@@ -211,10 +211,10 @@ class Manager:
         Utility.clear()
         if os.path.isfile(self._xmlfile + ".back"):
             # Ask user for overwriting existing backup file.
-            overwrite = Utility.get_answer_yn("A backup file already exists. Overwrite [y/n]? ")
+            overwrite = Utility.get_answer_yn("A backup file already exists. Overwrite?")
 
             # Making sure that only Y or y will overwrite the backup.
-            if overwrite.lower() != "y":
+            if overwrite != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
@@ -246,10 +246,10 @@ class Manager:
                 input("Press 'Enter' to continue: ")
                 return
             # Ask user for overwriting existing library file.
-            overwrite = Utility.get_answer_yn("This operation will overwrite existing library if any. Continue [y/n]? ")
+            overwrite = Utility.get_answer_yn("This operation will overwrite existing library if any. Continue?")
 
             # Making sure that only Y or y will overwrite the backup.
-            if overwrite.lower() != "y":
+            if overwrite != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
@@ -274,10 +274,10 @@ class Manager:
         Utility.clear()
         if os.path.isfile(self._xmlfile):
             # Ask user for overwriting existing library.
-            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library. Continue [y/n]? ")
+            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library. Continue?")
 
             # Making sure that only Y or y will overwrite the existing library.
-            if overwrite.lower() != "y":
+            if overwrite != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return
@@ -302,10 +302,10 @@ class Manager:
         Utility.clear()
         if os.path.isfile(self._xsdfile):
             # Ask user for overwriting existing schema file.
-            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library schema. Continue [y/n]? ")
+            overwrite = Utility.get_answer_yn("This operation will overwrite the existing library schema. Continue?")
 
             # Making sure that only Y or y will overwrite the existing schema.
-            if overwrite.lower() != "y":
+            if overwrite != "y":
                 print("Nothing has changed.")
                 input("Press 'Enter' to continue: ")
                 return

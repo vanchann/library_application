@@ -33,8 +33,8 @@ class Utility:
     def get_answer_yn(question):
         answer = ""
         while answer.lower() != "y" and answer.lower() != "n":
-            answer = input(question)
-        return answer
+            answer = input("{} [y/n] ".format(question))
+        return answer.lower()
     # End of static method get_answer_yn.
 
     """

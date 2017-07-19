@@ -44,12 +44,32 @@ class GameManager(Manager):
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <!-- definition of simple elements -->
-<xs:element name="title" type="xs:string"/>
-<xs:element name="shop" type="xs:string"/>
-<xs:element name="lastupdated" type="xs:date"/>
-<xs:element name="filename" type="xs:string"/>
+<xs:element name="title">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
 
-<!-- definition of simple types -->
+<xs:element name="shop">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="lastupdated" type="xs:date"/>
+
+<xs:element name="filename">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
 <xs:element name="finished">
     <xs:simpleType>
         <xs:restriction base="xs:string">
@@ -450,8 +470,19 @@ class GameManager(Manager):
         if element is None:
             menu = True
             Utility.clear()
+            # Generate new element.
+            element = self._generate_game()
+            # Return if element is still None.
+            if element is None:
+                input("Press 'Enter' to return to menu: ")
+                return
 
-            # TO ADD MENU
+            print("Adding item:")
+            print(element)
+            answer = Utility.get_answer_yn("Adding item {}?")
+            # User wants to quit.
+            if answer == "n":
+                return
 
         # Add item.
         if self.add_element(element) == 0:
@@ -507,19 +538,55 @@ class GameManager(Manager):
     """
     Method: _generate_game
 
-    Generate game python dictionaty.
+    Generate game python dictionary.
     """
     def _generate_game(self, game = None):
-        raise NotImplementedError("Method _generate_game should be implemented in child class.")
+        # Display header.
+        if game is None:
+            print("New", end = " ")
+            game = {"title": None, "shop": None, "finished": None}
+        print("Game Editor")
+        print()
+        # Get game's elements.
+        title = ""
+        while title == "":
+            title = input("Title{}: ".format("" if game["title"] is None else "[" + game["title"] + "]"))
+            if game["title"] and title == "":
+                title = game["title"]
+        # Exit editor if the user is trying to create a game, which already exists.
+        if game["title"] is None and self.get_element(title) is not None:
+            print("Game {} already exists.".format(title))
+            return None
+
+        game["title"] = title
+
+        shop = ""
+        while shop == "":
+            shop = input("Shop{}: ".format("" if game["shop"] is None else "[" + game["shop"] + "]"))
+            if game["shop"] and shop == "":
+                shop = game["shop"]
+        game["shop"] = shop
+
+        finished = Utility.get_answer_yn("Finished{}:".format("" if game["finished"] is None else "[" + game["finished"] + "]"))
+        if finished == "y":
+            game["finished"] = "Yes"
+        else:
+            game["finished"] = "No"
+
+        # Get game's installer elements.
+        if Utility.get_answer_yn("Open installer editor?") == "y":
+            self._generate_installer(game)
+        # Return game dictionary.
+        return game
     # End of method _generate_game.
 
     """
     Method: _generate_installer
 
-    Generate installer python dictionaty.
+    Generate installer python dictionary.
     """
-    def _generate_installer(self, installer = None):
-        raise NotImplementedError("Method _generate_installer should be implemented in child class.")
+    def _generate_installer(self, game, installer = None):
+        return
     # End of method _generate_installer.
 
     """

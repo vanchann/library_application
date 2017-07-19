@@ -2,12 +2,32 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <!-- definition of simple elements -->
-<xs:element name="title" type="xs:string"/>
-<xs:element name="shop" type="xs:string"/>
-<xs:element name="lastupdated" type="xs:date"/>
-<xs:element name="filename" type="xs:string"/>
+<xs:element name="title">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
 
-<!-- definition of simple types -->
+<xs:element name="shop">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="lastupdated" type="xs:date"/>
+
+<xs:element name="filename">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
 <xs:element name="finished">
     <xs:simpleType>
         <xs:restriction base="xs:string">
