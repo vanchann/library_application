@@ -10,12 +10,19 @@ from application import Application
 Function: main
 
 Entry point for the execution of the script.
+Command line arguments will be parsed and translated to their respecive target
+fuctionality.
 """
 def main():
     # Set command line arguments.
     parser = argparse.ArgumentParser(
                 prog = "Ligrary Management",
-                description = "Library management program utilizing XML human readable storage. Submitting no arguments displays menu.",
+                description = """
+                Library management program utilizing XML human readable storage. Submitting no arguments displays menu.
+
+                For a new element to be added to a library file, it should be passed as a string containing the element as a python dictionary.
+                Dictionary syntax is specific to the target library type.
+                """,
                 epilog = "Created by Evangelos Channakis.")
     excluegroup1 = parser.add_mutually_exclusive_group()
     excluegroup1.add_argument("-c", "--configure", action = "store_true", help = "create or reset configuration.")

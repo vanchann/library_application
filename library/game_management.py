@@ -27,15 +27,52 @@ class GameManager(Manager):
         sortingtags = ["title", "shop", "finished"]
         # Call parent initializer.
         super().__init__(storageroot, libfile, schemafile, libtype, sortingtags)
-    # End of initializer
+    # End of initializer.
 
-    # NOT implemented parent methods. Child class should implemented them, based on their storage settings.
+    # File import and export functionality.
+    """
+    Method: import_csv
+
+    Imports a CSV file as the XML library file.
+
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented.
+    """
+    def import_csv(self):
+        raise NotImplementedError("Method import_csv should be implemented in child class.")
+        """
+        try:
+            return 0
+        except OSError:
+            return 2
+        """
+    # End of method import_csv.
+
+    """
+    Method: export_csv
+
+    Exports XML library file as a CSV file.
+
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented.
+    """
+    def export_csv(self):
+        raise NotImplementedError("Method export_csv should be implemented in child class.")
+        """
+        try:
+            return 0
+        except OSError:
+            return 2
+        """
+    # End of method export_csv.
+
     # Storage management methods.
     """
     Method: restore_schema
 
     Restores the library schema file.
-    Returns 0 on success and 2 in case of error.
+
+    :return int: 0 on success and 2 in case of error.
     """
     def restore_schema(self):
         # Create the xsd tree.
@@ -139,6 +176,11 @@ class GameManager(Manager):
     Method: search_elements
 
     Search for elements containing a given value.
+
+    :param str element: The element tag containing the value. Should be in _sortingtags list.
+    :param str value: The value inside element tag to search for.
+    :param bool ascending[=True]: The order to sort the results.
+    :return int_or_list_or_None: Union[int, list, None].
     """
     def search_elements(self, element, value, ascending = True):
         # Validate storage.
@@ -169,6 +211,10 @@ class GameManager(Manager):
     Method: get_all_elements
 
     Gets all elements in the specified order.
+
+    :param str element[=None]: The element tag on which get will be based. Should be in _sortingtags list.
+    :param bool ascending[=True]: The order to sort the results.
+    :return int_or_list_or_None: Union[int, list, None].
     """
     def get_all_elements(self, element = None, ascending = True):
         # Validate storage.
@@ -198,6 +244,9 @@ class GameManager(Manager):
     Method: get_element
 
     Gets an element by unique value.
+
+    :param str element: The exact value in element title.
+    :return int_or_etree.Element_or_None: Union[int, etree.Element, None].
     """
     def get_element(self, element):
         # Validate storage.
@@ -222,7 +271,10 @@ class GameManager(Manager):
     """
     Method: _write_tree
 
-    Adds nodes to tree and save to file file.
+    Adds nodes to tree and writes it to file.
+
+    :param list nodes: The list of etree.Element nodes.
+    :return int: 0 on success, 2 on write file error and 3 on validation error.
     """
     def _write_tree(self, nodes):
             # Create the xml tree.
@@ -248,6 +300,9 @@ class GameManager(Manager):
     Method: _add_element_to_tree
 
     Adds new element to tree nodes.
+
+    :param etree.Element element: The element to be added.
+    :return int: 0 on success, 2 on write file error and 3 on validation error.
     """
     def _add_element_to_tree(self, element):
             # Create xml tree.
@@ -267,6 +322,17 @@ class GameManager(Manager):
     Method: add_element
 
     Adds an element.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param dict elementdict: The python dictionary containing the values of the element to be added to library.
+    :return int: 0 on success, 1 on dictionary key error, 2 on write file error and 3 on validation error.
     """
     def add_element(self, elementdict):
         # Create new element from elementdict.
@@ -303,6 +369,9 @@ class GameManager(Manager):
     Method: remove_element
 
     Removes an element.
+
+    :param str element: The exact value in element title.
+    :return int: 0 on success, 1 in case no node found, 2 on write file error and 3 on validation error.
     """
     def remove_element(self, element):
         # Create xml tree.
@@ -325,6 +394,8 @@ class GameManager(Manager):
     Method: _show_table
 
     Shows table of elements.
+
+    :param list elements: List of etree.Element to be shown.
     """
     def _show_table(self, elements):
         # Calculate max column widths.
@@ -356,6 +427,10 @@ class GameManager(Manager):
     Method: show_search_elements
 
     Shows elements of a search result.
+
+    :param str element[=None]: The element tag containing the value. Should be in _sortingtags list.
+    :param str value[=None]: The value inside element tag to search for.
+    :param bool ascending[=True]: The order to sort the results.
     """
     def show_search_elements(self, element = None, value = None, ascending = True):
         menu = None
@@ -387,6 +462,10 @@ class GameManager(Manager):
     Method: show_all_elements
 
     Shows all elements.
+
+    :param str element[=None]: The element tag on which show will be based. Should be in _sortingtags list.
+    :param bool ascending[=True]: The order to sort the results.
+    :param bool menu[=None]: Display menu.
     """
     def show_all_elements(self, element = None, ascending = True, menu = None):
         # Get all elements
@@ -414,7 +493,8 @@ class GameManager(Manager):
     Method: show_element
 
     Shows an element.
-    Value parameter may be used to pass the title to search programmatically.
+
+    :param str value[=None]: The exact value in element title.
     """
     def show_element(self, value = None):
         if value is None:
@@ -457,6 +537,16 @@ class GameManager(Manager):
     Method: show_add_element
 
     Shows messages about new element's addition.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param str element[=None]: The python dictionary containing the values of the element to be added to library.
     """
     def show_add_element(self, element = None):
         menu = None
@@ -492,6 +582,16 @@ class GameManager(Manager):
     Method: show_edit_element
 
     Shows element's editing messages.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param str element[=None]: The python dictionary containing the values of the element to be edited.
     """
     def show_edit_element(self, element = None):
         menu = None
@@ -533,7 +633,10 @@ class GameManager(Manager):
     """
     Method: _xmlgame_to_dict
 
-    Generates python dictionary form game xml element.
+    Generates python dictionary from game xml element.
+
+    :param etree.Element element: The game element node.
+    :return dict: The python dictionary version of the XML node.
     """
     def _xmlgame_to_dict(self, element):
         # Create python dictionary parsing element's values.
@@ -569,6 +672,8 @@ class GameManager(Manager):
     Method: show_remove_element
 
     Shows messages about element's removal.
+
+    :param str element[=None]: The exact value in element title.
     """
     def show_remove_element(self, element = None):
         menu = None
@@ -591,6 +696,17 @@ class GameManager(Manager):
     Method: _generate_game
 
     Generate game python dictionary.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param dict game[=None]: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing new values.
     """
     def _generate_game(self, game = None):
         # Display header.
@@ -636,6 +752,17 @@ class GameManager(Manager):
     Method: _generate_installer
 
     Generate installer python dictionary.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param dict game: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing edited installer list or without installer key, if there is no istaller.
     """
     def _generate_installer(self, game):
         Utility.clear()
@@ -694,6 +821,17 @@ class GameManager(Manager):
     Method: _generate_new_installer
 
     Generate new installer python dictionary.
+
+    Python dictionary form:
+    {
+        "title": "", "shop": "", "finished": "Yes/No",
+        "installer": [
+            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+        ]
+    }
+
+    :param dict game: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing new dictionaries into its installer list.
     """
     def _generate_new_installer(self, game):
         # Add new installer.
@@ -714,6 +852,12 @@ class GameManager(Manager):
     Method: _get_installer_values
 
     Gets game's installer values from the user.
+
+    Python dictionary form:
+    {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+
+    :param dict installer[=None]: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing new installer values.
     """
     def _get_installer_values(self, installer = None):
         Utility.clear()
@@ -770,7 +914,13 @@ class GameManager(Manager):
     Method: _generate_filename
 
     Asks about current filenames.
-    Call method to get new filename values from the user.
+    Calls method to get new filename values from the user.
+
+    Python dictionary form:
+    {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+
+    :param dict installer: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing edited filename list or without filename key, if there is no filename.
     """
     def _generate_filename(self, installer):
         removelist = []
@@ -817,7 +967,13 @@ class GameManager(Manager):
     """
     Method: _get_filename_values
 
-    Get new filename values from the user.
+    Gets new filename values from the user.
+
+    Python dictionary form:
+    {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
+
+    :param dict installer: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing new filenames into its filename list.
     """
     def _get_filename_values(self, installer):
         # Add new filenames.

@@ -30,8 +30,10 @@ class Application:
     """
     Method: __invalidconfexit
 
-    Check for configuration vallidity. Notify the user and exit in case of
-    invalid settings.
+    Check for configuration vallidity.
+    Notify the user and exit in case of invalid settings.
+
+    :sys.exit 2: Invalid configuration.
     """
     def __invalidconfexit(self):
         # Load configuration
@@ -45,6 +47,10 @@ class Application:
     Method: get_manager
 
     Gets a library manager object.
+
+    :param str libtype: The library type.
+    :return BooKManager_or_GameManager_or_MusicManager_or_VideoManager_or_None: Union[BooKManager, GameManager, MusicManager, VideoManager, None].
+    :sys.exit 3: Unsupported library type.
     """
     def get_manager(self, libtype):
         # Configuration vallidity check.
@@ -77,6 +83,8 @@ class Application:
     Method: load_library
 
     Loads the library of the specified type.
+
+    :param str libtype: The library type.
     """
     def load_library(self, libtype):
         manager = self.get_manager(libtype)
@@ -90,6 +98,8 @@ class Application:
     Method: library_types
 
     Return configured ligrary types list.
+
+    :return list: List of str representation of supported libraries.
     """
     def library_types(self):
         # Configuration vallidity check.
@@ -176,15 +186,12 @@ class Application:
             print("Configuration does not validate.")
             # Ask user for creating new configuration.
             newconf = ""
-            while newconf.lower() != "y" and newconf.lower() != "n":
-                newconf = input("Create new configuration files y(will overwrite existed files)/n? ")
+            while newconf != "y" and newconf != "n":
+                newconf = Utility.get_answer_yn("Create new configuration files (will overwrite existed files)?")
 
-            if newconf.lower() == "y":
+            if newconf == "y":
                 # Create new configuration.
                 self.configure()
-            else:
-                # Exit cleanly.
-                sys.exit(0)
     # End of method validate_configuration.
 
     """
@@ -284,6 +291,11 @@ class Application:
     Method: __errorioexit
 
     Show error messages and terminate execution of the program with an error code.
+
+    :param str name: The name of the file or directory, which has been failed to create.
+    :param str dirorfile[="file"]: The type of object, normally file or directory.
+    :param int code[=1]: The error code for the termination of the application.
+    :sys.exit code: Ths specified parameter code.
     """
     def __errorexit(self, name, dirorfile = "file", code = 1):
         # Show error messages and terminate execution of the program.
@@ -291,7 +303,7 @@ class Application:
         print("Check if path is valid and user has write privilege.")
         print("Program Excecution is terminating.")
         # Exit with an error code.
-        sys.exit(1)
+        sys.exit(code)
     # End of method __errorexit.
 # End of class Application.
 

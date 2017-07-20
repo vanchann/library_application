@@ -30,6 +30,9 @@ class Utility:
     Static method: get_answer_yn
 
     Asks for input until a Y/y or N/n has been entered.
+
+    :param str question: The message asking for input.
+    :return str: Valid user input, y or n.
     """
     @staticmethod
     def get_answer_yn(question):
@@ -43,7 +46,10 @@ class Utility:
     Method: validate
 
     Validates XML file given an XSD schema.
-    Returns 0 if validates, 1 if not and 2 in case of error.
+
+    :param str schemafile: The absolute path of XSD file.
+    :param str testfile: The absolute path of XML file.
+    :return int: 0 if validates, 1 if not and 2 in case of error.
     """
     @staticmethod
     def validate(schemafile, testfile):
@@ -67,7 +73,10 @@ class Utility:
     Method: validate_tree
 
     Validates XML tree given an XSD schema.
-    Returns 0 if validates, 1 if not and 2 in case of error.
+
+    :param str schemafile: The absolute path of XSD file.
+    :param str tree: The XML tree.
+    :return int: 0 if validates, 1 if not and 2 in case of error.
     """
     @staticmethod
     def validate_tree(schemafile, tree):
@@ -90,6 +99,9 @@ class Utility:
 
     Checks if string is a valid date.
     Date string pattern is YYYY-MM-DD.
+
+    :param str datestr: The string representation of the date.
+    :return str_or_None: Union[str, None].
     """
     @staticmethod
     def validate_date(datestr):

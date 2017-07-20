@@ -27,7 +27,7 @@ class Manager:
         self._xmlfile = os.path.join(self._storageroot, self._libtype, libfile)
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
         self._sortingtags = sortingtags
-    # End of initializer
+    # End of initializer.
 
     # Implemented methods, whis may be called from a Manager instance object.
     """
@@ -131,6 +131,8 @@ class Manager:
     Method: get_sorting_element
 
     Gets a shortng elements tag.
+
+    :return str_or_None: Union[str, None].
     """
     def get_sorting_element(self):
         # Generate menu
@@ -161,6 +163,8 @@ class Manager:
     Method: get_sorting_order
 
     Gets sorting order.
+
+    :return bool: The ascending order.
     """
     def get_sorting_order(self):
         # Generate menu
@@ -233,7 +237,7 @@ class Manager:
     """
     Method: show_restore
 
-    Displays messages for restoring the library file form backup.
+    Displays messages for restoring the library file from backup.
     """
     def show_restore(self):
         Utility.clear()
@@ -335,7 +339,8 @@ class Manager:
     Method: backup
 
     Creates backup of the library file.
-    Returns 0 on success and 2 in case of error.
+
+    :return int: 0 on success and 2 in case of error.
     """
     def backup(self):
         try:
@@ -348,8 +353,9 @@ class Manager:
     """
     Method: restore
 
-    Restores the library file form backup.
-    Returns 0 on success and 2 in case of error.
+    Restores the library file from backup.
+
+    :return int: 0 on success and 2 in case of error.
     """
     def restore(self):
         try:
@@ -363,7 +369,8 @@ class Manager:
     Method: create_library
 
     Creates a new empty library storage file.
-    Returns 0 on success, 1 in case of directory tree error and 2 in case of file error.
+
+    :return int: 0 on success, 1 in case of directory tree error and 2 in case of file error.
     """
     def create_library(self):
         storagedir = os.path.join(self._storageroot, self._libtype)
@@ -387,74 +394,12 @@ class Manager:
             return 2
     # End of method create_library.
 
-    # NOT implemented methods. Child class should implemented them, based on their storage settings.
-    # Storage management methods.
-    """
-    Method: restore_schema
-
-    Restores the library schema file.
-    Returns 0 on success and 2 in case of error.
-    """
-    def restore_schema(self):
-        raise NotImplementedError("Method restore_schema should be implemented in child class.")
-        """
-        try:
-            return 0
-        except OSError:
-            return 2
-        """
-    # End of method restore_schema.
-
-    """
-    Method: search_elements
-
-    Search for elements containing a given value.
-    """
-    def search_elements(self, element, value, ascending = True):
-        raise NotImplementedError("Method search_elements should be implemented in child class.")
-    # End of method search_elements.
-
-    # Element manipulation methods.
-    """
-    Method: get_all_elements
-
-    Gets all elements in the specified order.
-    """
-    def get_all_elements(self, element = None, ascending = True):
-        raise NotImplementedError("Method get_all_elements should be implemented in child class.")
-    # End of method get_all_elements.
-
-    """
-    Method: get_element
-
-    Gets an element by unique value.
-    """
-    def get_element(self, element):
-        raise NotImplementedError("Method get_element should be implemented in child class.")
-    # End of method get_element.
-
-    """
-    Method: add_element
-
-    Adds an element.
-    """
-    def add_element(self, elementdict):
-        raise NotImplementedError("Method add_element should be implemented in child class.")
-    # End of method add_element.
-
-    """
-    Method: remove_element
-
-    Removes an element.
-    """
-    def remove_element(self, element):
-        raise NotImplementedError("Method remove_element should be implemented in child class.")
-    # End of method remove_element.
-
     """
     Method: edit_element
 
     Edits an element.
+
+    :return int: 0 on success, 1 in case of directory tree error and 2 in case of file error.
     """
     def edit_element(self, originalkey, elementdict):
         # Initialization is not necessary, but helps readability.
@@ -485,11 +430,119 @@ class Manager:
         return value
     # End of method edit_element.
 
+    # NOT implemented methods. Child class should implemented them, based on their storage settings.
+    # File import and export functionality.
+    """
+    Method: import_csv
+
+    Imports a CSV file as the XML library file.
+
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def import_csv(self):
+        raise NotImplementedError("Method import_csv should be implemented in child class.")
+    # End of method import_csv.
+
+    """
+    Method: export_csv
+
+    Exports XML library file as a CSV file.
+
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def export_csv(self):
+        raise NotImplementedError("Method export_csv should be implemented in child class.")
+    # End of method export_csv.
+
+    # Storage management methods.
+    """
+    Method: restore_schema
+
+    Restores the library schema file.
+
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def restore_schema(self):
+        raise NotImplementedError("Method restore_schema should be implemented in child class.")
+    # End of method restore_schema.
+
+    """
+    Method: search_elements
+
+    Search for elements containing a given value.
+
+    :param str element: The element tag containing the value. Should be in _sortingtags list.
+    :param str value: The value inside element tag to search for.
+    :param bool ascending[=True]: The order to sort the results.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def search_elements(self, element, value, ascending = True):
+        raise NotImplementedError("Method search_elements should be implemented in child class.")
+    # End of method search_elements.
+
+    # Element manipulation methods.
+    """
+    Method: get_all_elements
+
+    Gets all elements in the specified order.
+
+    :param str element[=None]: The element tag on which get will be based. Should be in _sortingtags list.
+    :param bool ascending[=True]: The order to sort the results.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def get_all_elements(self, element = None, ascending = True):
+        raise NotImplementedError("Method get_all_elements should be implemented in child class.")
+    # End of method get_all_elements.
+
+    """
+    Method: get_element
+
+    Gets an element by unique value.
+
+    :param str element: The exact value in element tag. Tag text should be unique.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def get_element(self, element):
+        raise NotImplementedError("Method get_element should be implemented in child class.")
+    # End of method get_element.
+
+    """
+    Method: add_element
+
+    Adds an element.
+
+    :param dict elementdict: The python dictionary containing the values of the element to be added to library.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def add_element(self, elementdict):
+        raise NotImplementedError("Method add_element should be implemented in child class.")
+    # End of method add_element.
+
+    """
+    Method: remove_element
+
+    Removes an element.
+
+    :param str element: The exact value in element tag. Tag text should be unique.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def remove_element(self, element):
+        raise NotImplementedError("Method remove_element should be implemented in child class.")
+    # End of method remove_element.
+
     # Display methods.
     """
     Method: show_search_elements
 
     Shows elements of a search result.
+
+    :param str element[=None]: The element tag containing the value. Should be in _sortingtags list.
+    :param str value[=None]: The value inside element tag to search for.
+    :param bool ascending[=True]: The order to sort the results.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_search_elements(self, element = None, value = None, ascending = True):
         raise NotImplementedError("Method show_search_elements should be implemented in child class.")
@@ -499,6 +552,11 @@ class Manager:
     Method: show_all_elements
 
     Shows all elements.
+
+    :param str element[=None]: The element tag on which show will be based. Should be in _sortingtags list.
+    :param bool ascending[=True]: The order to sort the results.
+    :param bool menu[=None]: Display menu.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_all_elements(self, element = None, ascending = True, menu = None):
         raise NotImplementedError("Method show_all_elements should be implemented in child class.")
@@ -508,6 +566,9 @@ class Manager:
     Method: show_element
 
     Shows an element.
+
+    :param str value[=None]: The exact value in element tag. Tag text should be unique.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_element(self, value = None):
         raise NotImplementedError("Method show_element should be implemented in child class.")
@@ -517,6 +578,9 @@ class Manager:
     Method: show_add_element
 
     Shows messages about new element's addition.
+
+    :param str element[=None]: The python dictionary containing the values of the element to be added to library.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_add_element(self, element = None):
         raise NotImplementedError("Method show_add_element should be implemented in child class.")
@@ -526,6 +590,9 @@ class Manager:
     Method: show_edit_element
 
     Shows element's editing messages.
+
+    :param str element[=None]: The python dictionary containing the values of the element to be edited.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_edit_element(self, element = None):
         raise NotImplementedError("Method show_edit_element should be implemented in child class.")
@@ -535,6 +602,9 @@ class Manager:
     Method: show_remove_element
 
     Shows messages about element's removal.
+
+    :param str element[=None]: The exact value in element tag. Tag text should be unique.
+    :raise NotImplementedError: Method should be implemented in child class.
     """
     def show_remove_element(self, element = None):
         raise NotImplementedError("Method show_remove_element should be implemented in child class.")
