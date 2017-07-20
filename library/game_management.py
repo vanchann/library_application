@@ -4,7 +4,6 @@
 import os
 import sys
 from lxml import etree
-#from lxml import objectify
 from library.management import Manager
 from library.support.utility import Utility
 
@@ -551,7 +550,7 @@ class GameManager(Manager):
         title = ""
         while title == "":
             title = input("Title{}: ".format("" if game["title"] is None else "[" + game["title"] + "]"))
-            if game["title"] and title == "":
+            if game["title"] is not None and title == "":
                 title = game["title"]
         # Exit editor if the user is trying to create a game, which already exists.
         if game["title"] is None and self.get_element(title) is not None:
@@ -563,7 +562,7 @@ class GameManager(Manager):
         shop = ""
         while shop == "":
             shop = input("Shop{}: ".format("" if game["shop"] is None else "[" + game["shop"] + "]"))
-            if game["shop"] and shop == "":
+            if game["shop"] is not None and shop == "":
                 shop = game["shop"]
         game["shop"] = shop
 
@@ -585,9 +584,152 @@ class GameManager(Manager):
 
     Generate installer python dictionary.
     """
-    def _generate_installer(self, game, installer = None):
-        return
+    def _generate_installer(self, game):
+        Utility.clear()
+        # Display header.
+        print("Installer Editor")
+        print()
+        if "installer" in game:
+            # Generate range of menu values once.
+            choices = range(1, 4)
+            for installer in game["installer"]:
+                print("Installer:")
+                for key, value in installer:
+                    print("    {}: {}".format(key.title(), value))
+
+                # Get action from the user.
+                choice = None
+                # Generate menu
+                while choice not in choices:
+                    # Display menu
+                    print("1. Keep and continue")
+                    print("2. Remove installer")
+                    print("3. Edit installer")
+                    # Get user choice.
+                    try:
+                        choice = int(input("Enter your choice: "))
+                    except ValueError:
+                        choice = None
+
+                    # React to user choice.
+                    if choice == 1:
+                        # Pass for 1.
+                        # Alternatively break out of the loop.
+                        pass
+                    elif choice == 2:
+                        game["installer"].remove(installer)
+                        print("Installer has been removed.")
+                    elif choice == 3:
+                        self._get_installer_values(installer)
+                    else:
+                        choice = None
+        # Add new installer.
+        installers = []
+        while Utility.get_answer_yn("Add new installer?") == "y":
+            newinst = self._get_installer_values()
+            installers.append(newinst)
+        # Add installers to game.
+        if installers:
+            if "installer" in game:
+                game["installer"] += installers
+            else:
+                game["installer"] = installers
     # End of method _generate_installer.
+
+    """
+    Method: _get_installer_values
+
+    Gets game's installer values from the user.
+    """
+    def _get_installer_values(self, installer = None):
+        Utility.clear()
+        # Display header.
+        if installer is None:
+            print("New", end = " ")
+            installer = {"system": None}
+        print("Installer")
+        print()
+        # Get installer's values.
+        # Get system.
+        systems = ['Windows', 'Mac', 'Linux', 'Other']
+        schoices = range(1, 5)
+        system = None
+        while system not in systems:
+            # Display menu
+            print("System{}: ".format("" if installer["system"] is None else "[" + installer["system"] + "]"))
+            for s in systems:
+                print("{}. {}".format(systems.index(s) + 1, s))
+            # Get user choice.
+            try:
+                choice = input("Enter your choice: ")
+                if choice == "":
+                    system = installer["system"]
+                else:
+                    choice = int(choice)
+                    if choice in schoices:
+                        system = systems[choice - 1]
+            except ValueError:
+                choice = None
+        installer["system"] = system
+        # Get lastupdated.
+        lastupdated = None
+        while lastupdated is None:
+            print("Date should be written in form YYYY-MM-DD.")
+            lastupdated = input("Last updated at{}: ".format("[" + installer["lastupdated"] + "]" if "lastupdated" in installer else ""))
+            # Check if value is a valid date.
+            valid = Utility.validate_date(lastupdated)
+            if valid is not None:
+                installer["lastupdated"] = valid
+            elif lastupdated == "":
+                # Pass for 1.
+                # Alternatively break out of the loop.
+                pass
+            else:
+                lastupdated = None
+        # Get filename.
+        if "filename" in installer:
+            for filename in installer["filename"]:
+                # Get action from the user.
+                choice = None
+                # Generate menu
+                while choice not in choices:
+                    # Display menu
+                    print("1. Keep and continue")
+                    print("2. Remove filename")
+                    # Get user choice.
+                    try:
+                        choice = int(input("Enter your choice: "))
+                    except ValueError:
+                        choice = None
+
+                    # React to user choice.
+                    if choice == 1:
+                        # Pass for 1.
+                        # Alternatively break out of the loop.
+                        pass
+                    elif choice == 2:
+                        installer["filename"].remove(filename)
+                        print("Filename has been removed.")
+                    else:
+                        choice = None
+        # Add new filenames.
+        fnames = []
+        filename = "Enter Loop"
+        #print(filename != "")
+        while filename != "":
+            filename = input("Add filename [leave empty to stop]: ")
+            filename = filename.strip()
+            if filename != "":
+                fnames.append(filename)
+        # Add filenames to installer.
+        if fnames:
+            if "filename" in installer:
+                installer["filename"] += fnames
+            else:
+                installer["filename"] = fnames
+
+        return installer
+    # End of method _get_installer_values.
 
     """
     Method: show_element_editor

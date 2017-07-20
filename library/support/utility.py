@@ -3,6 +3,8 @@
 # imports
 import os
 import platform
+import re
+import calendar
 from lxml import etree
 
 """
@@ -82,4 +84,52 @@ class Utility:
         except FileNotFoundError:
             return 2
     # End of static method validate_tree.
+
+    """
+    Method: validate_date
+
+    Checks if string is a valid date.
+    Date string pattern is YYYY-MM-DD.
+    """
+    @staticmethod
+    def validate_date(datestr):
+        pattern = re.compile("^\d{4}-\d{2}-\d{2}$")
+        datestr = datestr.strip()
+        match = pattern.match(datestr)
+        # No match.
+        if match is None:
+            return None
+
+        # Cast strings to integers.
+        numbers = match.group().split("-")
+        try:
+            for i in range(len(numbers)):
+                numbers[i] = int(numbers[i])
+        except ValueError:
+            return None
+        # Check if months and days are valid.
+        if numbers[1] < 1 or numbers[1] > 12:
+            # Invalid month.
+            return None
+        elif numbers[2] < 1:
+            # Invalid number of days.
+            return None
+        elif numbers[1] in [4, 6, 9, 11] and numbers[2] > 30:
+            # Invalid number of days per month.
+            return None
+        elif numbers[1] in [1, 3, 5 ,7 , 8, 10, 12] and numbers[2] > 31:
+            # Invalid number of days per month.
+            return None
+        elif numbers[1] == 2:
+            if calendar.isleap(numbers[0]):
+                if numbers[2] > 29:
+                    # Invalid number of days per month.
+                    return None
+            elif numbers[2] > 28:
+                # Invalid number of days per month.
+                return None
+
+        # String is a valid date.
+        return match.group()
+    # End of static method validate_date.
 # End of class Utility.
