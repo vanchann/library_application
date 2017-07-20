@@ -238,7 +238,7 @@ class GameManager(Manager):
                 return 3
             # Write to file.
             try:
-                xmlout.write(self._xmlfile, xml_declaration=True, encoding="UTF-8", pretty_print=True)
+                xmlout.write(self._xmlfile, xml_declaration = True, encoding = "UTF-8", pretty_print = True)
                 return 0
             except OSError:
                 return 2
@@ -320,15 +320,6 @@ class GameManager(Manager):
         # Write to file.
         return self._write_tree(nodes)
     # End of method remove_element.
-
-    """
-    Method: edit_element
-
-    Edits an element.
-    """
-    def edit_element(self, element):
-        raise NotImplementedError("Method edit_element should be implemented in child class.")
-    # End of method edit_element.
 
     """
     Method: _show_table
@@ -445,6 +436,10 @@ class GameManager(Manager):
             # Iterate though result as needed and display game information.
             print("{}:".format(element.tag.title()))
             for item in element.iterchildren():
+                # Making sure installer tag has text, so that it will be iterated.
+                if item.tag == "installer":
+                    item.text = " "
+
                 if item.text is not None:
                     depth = 4
                     print("{}{}: {}".format(" " * depth, item.tag.title(), item.text.strip()))
@@ -478,7 +473,7 @@ class GameManager(Manager):
 
             print("Adding item:")
             print(element)
-            answer = Utility.get_answer_yn("Adding item {}?")
+            answer = Utility.get_answer_yn("Add item?")
             # User wants to quit.
             if answer == "n":
                 return
@@ -500,17 +495,75 @@ class GameManager(Manager):
     """
     def show_edit_element(self, element = None):
         menu = None
-
         # Get the element's title from the user.
         if element is None:
             menu = True
             Utility.clear()
-
-            # TO ADD MENU
-
+            element = input("Enter the title of the item to be edited: ")
+        # Get element.
+        game = self.get_element(element)
+        if game is None:
+            print("No game with title {} found.".format(element))
+        elif isinstance(game, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        else:
+            # Create python dictionary parsing element's values.
+            gamedict = self._xmlgame_to_dict(game)
+            # Edit game.
+            gamedict = self._generate_game(gamedict)
+            #confirm before save.
+            print("Saving item:")
+            print(gamedict)
+            answer = Utility.get_answer_yn("Save item?")
+            # User wants to quit.
+            if answer == "n":
+                return
+            # Persist changes.
+            try:
+                if self.edit_element(element, gamedict) == 0:
+                    print("The edited item {} has been saved successfully.".format(element))
+                else:
+                    print("The edited item {} has not been saved.".format(element))
+            except OSError:
+                print("Temporary file ha not been removed, after the edited item {} has been saved.".format(element))
         if menu:
             input("Press 'Enter' to return to menu: ")
     # End of method show_edit_element.
+
+    """
+    Method: _xmlgame_to_dict
+
+    Generates python dictionary form game xml element.
+    """
+    def _xmlgame_to_dict(self, element):
+        # Create python dictionary parsing element's values.
+        gamedict = {}
+        installer = []
+        for item in element.iterchildren():
+            # Making sure installer tag has text, so that it will be iterated.
+            if item.tag == "installer":
+                item.text = " "
+            # Elements in game.
+            if item.text is not None:
+                gamedict[item.tag] = item.text.strip()
+                if item.tag == "installer":
+                    installerdict = {}
+                    filename = []
+                    # Elements in installer.
+                    for subitem in item.iterchildren():
+                        if subitem.text is not None:
+                            if subitem.tag == "filename":
+                                filename.append(subitem.text.strip())
+                            else:
+                                installerdict[subitem.tag] = subitem.text.strip()
+                    if filename:
+                        installerdict["filename"] = filename
+                    installer.append(installerdict)
+        if installer:
+            gamedict["installer"] = installer
+
+        return gamedict
+    # End of method _xmlgame_to_dict.
 
     """
     Method: show_remove_element
@@ -574,7 +627,7 @@ class GameManager(Manager):
 
         # Get game's installer elements.
         if Utility.get_answer_yn("Open installer editor?") == "y":
-            self._generate_installer(game)
+            game = self._generate_installer(game)
         # Return game dictionary.
         return game
     # End of method _generate_game.
@@ -590,21 +643,22 @@ class GameManager(Manager):
         print("Installer Editor")
         print()
         if "installer" in game:
+            removelist = []
             # Generate range of menu values once.
             choices = range(1, 4)
             for installer in game["installer"]:
                 print("Installer:")
-                for key, value in installer:
-                    print("    {}: {}".format(key.title(), value))
+                for key in installer:
+                    print("    {}: {}".format(key, installer[key]))
 
+                # Display menu
+                print("1. Keep and continue")
+                print("2. Remove installer")
+                print("3. Edit installer")
                 # Get action from the user.
                 choice = None
                 # Generate menu
                 while choice not in choices:
-                    # Display menu
-                    print("1. Keep and continue")
-                    print("2. Remove installer")
-                    print("3. Edit installer")
                     # Get user choice.
                     try:
                         choice = int(input("Enter your choice: "))
@@ -617,12 +671,31 @@ class GameManager(Manager):
                         # Alternatively break out of the loop.
                         pass
                     elif choice == 2:
-                        game["installer"].remove(installer)
+                        # Add elements to removal list.
+                        removelist.append(installer)
                         print("Installer has been removed.")
                     elif choice == 3:
                         self._get_installer_values(installer)
                     else:
                         choice = None
+            # Remove marked installers permanently.
+            for rvalue in removelist:
+                game["installer"].remove(rvalue)
+            # If list is empty remove respective game dictionary key.
+            if len(game["installer"]) == 0:
+                del game["installer"]
+        # Add new installer.
+        game = self._generate_new_installer(game)
+
+        return game
+    # End of method _generate_installer.
+
+    """
+    Method: _generate_new_installer
+
+    Generate new installer python dictionary.
+    """
+    def _generate_new_installer(self, game):
         # Add new installer.
         installers = []
         while Utility.get_answer_yn("Add new installer?") == "y":
@@ -634,7 +707,8 @@ class GameManager(Manager):
                 game["installer"] += installers
             else:
                 game["installer"] = installers
-    # End of method _generate_installer.
+        return game
+    # End of method _generate_new_installer.
 
     """
     Method: _get_installer_values
@@ -686,16 +760,32 @@ class GameManager(Manager):
                 pass
             else:
                 lastupdated = None
+        # Get filenames.
+        installer = self._generate_filename(installer)
+
+        return installer
+    # End of method _get_installer_values.
+
+    """
+    Method: _generate_filename
+
+    Asks about current filenames.
+    Call method to get new filename values from the user.
+    """
+    def _generate_filename(self, installer):
+        removelist = []
         # Get filename.
         if "filename" in installer:
             for filename in installer["filename"]:
                 # Get action from the user.
+                choices = range(1, 3)
                 choice = None
                 # Generate menu
+                # Display menu
+                print(filename)
+                print("1. Keep and continue")
+                print("2. Remove filename")
                 while choice not in choices:
-                    # Display menu
-                    print("1. Keep and continue")
-                    print("2. Remove filename")
                     # Get user choice.
                     try:
                         choice = int(input("Enter your choice: "))
@@ -708,10 +798,28 @@ class GameManager(Manager):
                         # Alternatively break out of the loop.
                         pass
                     elif choice == 2:
-                        installer["filename"].remove(filename)
+                        removelist.append(filename)
                         print("Filename has been removed.")
                     else:
                         choice = None
+            # Remove marked filenames permanently.
+            for rvalue in removelist:
+                installer["filename"].remove(rvalue)
+            # If list is empty remove respective installer dictionary key.
+            if len(installer["filename"]) == 0:
+                del installer["filename"]
+        # Add new filenames.
+        self._get_filename_values(installer)
+
+        return installer
+    # End of method _generate_filename.
+
+    """
+    Method: _get_filename_values
+
+    Get new filename values from the user.
+    """
+    def _get_filename_values(self, installer):
         # Add new filenames.
         fnames = []
         filename = "Enter Loop"
@@ -729,16 +837,7 @@ class GameManager(Manager):
                 installer["filename"] = fnames
 
         return installer
-    # End of method _get_installer_values.
-
-    """
-    Method: show_element_editor
-
-    Shows the element editor.
-    """
-    def show_element_editor(self, action = None, element = None):
-        raise NotImplementedError("Method show_element_editor should be implemented in child class.")
-    # End of method show_element_editor.
+    # End of method _get_filename_values.
 # End of class GameManager.
 
 # The following section contains code to execute when script is run from the command line.

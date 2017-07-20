@@ -15,6 +15,11 @@
             <filename>win_file_3</filename>
         </installer>
         <installer>
+            <system>Mac</system>
+            <filename>mac_file_1</filename>
+            <filename>mac_file_2</filename>
+        </installer>
+        <installer>
             <system>Linux</system>
             <filename>lin_file_1</filename>
             <filename>lin_file_2</filename>

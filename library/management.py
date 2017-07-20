@@ -456,8 +456,33 @@ class Manager:
 
     Edits an element.
     """
-    def edit_element(self, element):
-        raise NotImplementedError("Method edit_element should be implemented in child class.")
+    def edit_element(self, originalkey, elementdict):
+        # Initialization is not necessary, but helps readability.
+        value = 0
+        try:
+            # Create a temporary library backup.
+            temp =  self._xmlfile + ".temp"
+            shutil.copy2(self._xmlfile, temp)
+            # Remove original element.
+            value = self.remove_element(originalkey)
+            if value == 0:
+                # Save new file containing the edited element.
+                value = self.add_element(elementdict)
+                if value != 0:
+                    # Restore original file from temp.
+                    shutil.copy2(temp, self._xmlfile)
+        except OSError:
+            return 2
+        finally:
+            # Remove temporary file.
+            # If a new exception will be raised here, keep the temporary file on
+            # disk, so that library restoration may still be possible and let
+            # the exception bubbling.
+            # Since the users has the privilege to create the file, its revoval
+            # should have been possible too.
+            os.remove(temp)
+
+        return value
     # End of method edit_element.
 
     # Display methods.
@@ -514,15 +539,6 @@ class Manager:
     def show_remove_element(self, element = None):
         raise NotImplementedError("Method show_remove_element should be implemented in child class.")
     # End of method show_remove_element.
-
-    """
-    Method: show_element_editor
-
-    Shows the element editor.
-    """
-    def show_element_editor(self, action = None, element = None):
-        raise NotImplementedError("Method show_element_editor should be implemented in child class.")
-    # End of method show_element_editor.
 # End of class Manager.
 
 # The following section contains code to execute when script is run from the command line.
