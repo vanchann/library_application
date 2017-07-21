@@ -92,6 +92,11 @@ Testing is not exhaustive nor complete at this time.
 Minimum required python version for testing is 3.3, due to unittest.mock module
 dependency.
 
+Testing is not exhaustive nor complete at this time.
+
+Minimum required python version for testing is 3.3, due to unittest.mock module
+dependency.
+
 In order to run tests from testing module, system variable PYTHONPATH should be
 set to root (/path/to/library_application) directory of the application.
 Otherwise application's module imports will fail.
