@@ -23,7 +23,7 @@ def main():
                 For a new element to be added to a library file, it should be passed as a string containing the element as a python dictionary.
                 Dictionary syntax is specific to the target library type.
                 """,
-                epilog = "Created by Evangelos Channakis.")
+                epilog = "Developed by Evangelos Channakis.")
     excluegroup1 = parser.add_mutually_exclusive_group()
     excluegroup1.add_argument("-c", "--configure", action = "store_true", help = "create or reset configuration.")
     excluegroup1.add_argument("-l", "--load", help = "load library of type 'LOAD'.")
