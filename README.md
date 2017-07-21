@@ -1,12 +1,13 @@
 GENERAL INFORMATION
+--------------------------------------------------------------------------------
 
 The library_application module contains a personal library management application
 written in python 3.
 
 This is the offline CLI version.
---------------------------------------------------------------------------------
 
 DESCRIPTION AND REQUIREMENTS
+--------------------------------------------------------------------------------
 
 Python is very helpful for quick coding solutions.
 The minimum version for this application is python 3.2, because of argparse module
@@ -41,9 +42,9 @@ even a GUI version.
 
 I'm developing this application according to my personal needs, but new ideas would
 be more than welcome.
---------------------------------------------------------------------------------
 
 DIRECTORY TREE BASED ON DEFAULT CONFIGURATION
+--------------------------------------------------------------------------------
 
 library_application/
         config/
@@ -83,9 +84,13 @@ library_application/
         application.py
         README.md
         run.py
---------------------------------------------------------------------------------
 
 TESTING
+--------------------------------------------------------------------------------
+Testing is not exhaustive nor complete at this time.
+
+Minimum required python version for testing is 3.3, due to unittest.mock module
+dependency.
 
 Testing is not exhaustive nor complete at this time.
 
@@ -98,4 +103,3 @@ Otherwise application's module imports will fail.
 
 To overcome the above issue, root directory has already be inserted in sys.path
 before any import of the main application's modules.
---------------------------------------------------------------------------------
