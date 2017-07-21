@@ -1006,6 +1006,6 @@ def main():
     print(__file__)
 # End of function main.
 
-# Test running or loading
+# Test running or loading.
 if __name__ == "__main__":
     main()

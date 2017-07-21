@@ -107,8 +107,8 @@ def main():
         return
     # Display menu
     app.show_menu()
-# End of function main
+# End of function main.
 
-# Test running or loading
+# Test running or loading.
 if __name__ == "__main__":
     main()
