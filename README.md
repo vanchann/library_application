@@ -45,7 +45,7 @@ be more than welcome.
 
 DIRECTORY TREE BASED ON DEFAULT CONFIGURATION
 --------------------------------------------------------------------------------
-
+```
 library_application/
         config/
                 config.xml
@@ -84,7 +84,7 @@ library_application/
         application.py
         README.md
         run.py
-
+```
 TESTING
 --------------------------------------------------------------------------------
 Testing is not exhaustive nor complete at this time.
