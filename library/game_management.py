@@ -3,6 +3,7 @@
 # imports
 import os
 import sys
+import csv
 from lxml import etree
 from library.management import Manager
 from library.support.utility import Utility
@@ -50,10 +51,27 @@ class GameManager(Manager):
     Only fields listed in sortingtags are supported for now.
 
     :param str expfile: the file to export.
-    :return int: 0 on success and 2 in case of error.
+    :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
     """
     def export_csv(self, expfile):
-        return 2
+        try:
+            # Open CSV file for writing.
+            with open(expfile, "w", newline = "") as csvfile:
+                filewriter = csv.writer(csvfile, quotechar = "\\", quoting = csv.QUOTE_MINIMAL)
+                # Write header row.
+                filewriter.writerow([self._sortingtags[0].title(), self._sortingtags[1].title(), self._sortingtags[2].title()])
+                # Get all items
+                items = self.get_all_elements()
+                # Check for errors before proceed.
+                if isinstance(items, int):
+                    return items
+                # Write items to CSV file.
+                for item in items:
+                    filewriter.writerow([item[0].text, item[1].text, item[2].text])
+        except OSError:
+            return 2
+        # File export was successful.
+        return 0
     # End of method export_csv.
 
     # Storage management methods.

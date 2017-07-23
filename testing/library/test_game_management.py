@@ -213,6 +213,14 @@ class TestGameManager(unittest.TestCase):
         test = "Exact match will be made!No game with title TesT found."
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_no_existing.
+
+    """
+    Test function export_csv.
+    """
+    #@unittest.skip("Skipped.")
+    def test_export_csv(self):
+        self.assertEqual(self.manager.export_csv("games.csv"), 0)
+    # End of method test_export_csv.
 # End of class TestRunModule.
 
 # Test running or loading.
