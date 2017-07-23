@@ -540,13 +540,24 @@ class Manager:
     Method: show_import_csv
 
     Shows import CSV file messages.
+    Valid CSV header is subclass specific.
 
     :param str impfile: the file to import.
-    :return int: 0 on success and 2 in case of error.
-    :raise NotImplementedError: Method should be implemented in child class.
+    :return int: 0 on success, 1 if CSV is not valid and 2 in case of filesystem write error.
     """
     def show_import_csv(self, impfile):
-        raise NotImplementedError("Method import_csv should be implemented in child class.")
+        result = 1
+        # Check if file exists.
+        if not os.path.isfile(impfile):
+            print("File {} does not exist.".format(impfile))
+            return result
+        # Import file.
+        result = self.import_csv(impfile)
+        if result == 0:
+            print("File '{}' has been imported successfully.".format(impfile))
+        else:
+            print("An error occurred.")
+        return result
     # End of method show_import_csv.
 
     """
@@ -555,11 +566,16 @@ class Manager:
     Shows export CSV messages.
 
     :param str expfile: the file to export.
-    :return int: 0 on success and 2 in case of error.
-    :raise NotImplementedError: Method should be implemented in child class.
+    :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
     """
     def show_export_csv(self, expfile):
-        raise NotImplementedError("Method export_csv should be implemented in child class.")
+        # Export file.
+        result = self.export_csv(expfile)
+        if result == 0:
+            print("File '{}' has been exported successfully.".format(expfile))
+        else:
+            print("An error occurred.")
+        return result
     # End of method show_export_csv.
 
     """
