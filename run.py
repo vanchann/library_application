@@ -37,6 +37,10 @@ def main():
     excluegroup2.add_argument("--show-all", action = "store_true", help = "show all items of the loaded library sorted by the default element in ascending order.")
     excluegroup2.add_argument("--show-all-by", help = "show all items of the loaded library sorted by 'SHOW_ALL_BY' element in ascending order.")
 
+    excluegroup3 = parser.add_mutually_exclusive_group()
+    excluegroup3.add_argument("--export-csv", help = "export loaded library to file 'EXPORT_CSV'.")
+    excluegroup3.add_argument("--import-csv", help = "import file 'IMPORT_CSV' to the loaded library.")
+
     parser.add_argument("--reverse", action = "store_true", help = "sort items in reverse (descending) order.")
     parser.add_argument("--value", help = "the 'VALUE' to search for.")
     parser.add_argument("--version", action = "version", version = "%(prog)s 0.1.0")
@@ -55,8 +59,11 @@ def main():
         app.validate_configuration()
         return
     if args.load:
-        # print("Loading library of type {}...".format(args.load.lower()))
-        if args.show_all:
+        if args.export_csv:
+            app.get_manager(args.load.lower()).show_export_csv(args.export_csv)
+        elif args.import_csv:
+            app.get_manager(args.load.lower()).show_import_csv(args.import_csv)
+        elif args.show_all:
             app.get_manager(args.load.lower()).show_all_elements(ascending = not args.reverse)
         elif args.show_all_by:
             app.get_manager(args.load.lower()).show_all_elements(args.show_all_by, not args.reverse)
@@ -75,6 +82,13 @@ def main():
             app.load_library(args.load.lower())
         return
     # Incorectly used options.
+    if args.export_csv:
+        # There is no library loaded.
+        print("Argument --export-csv, should be used with argument --load.")
+        return
+    if args.import_csv:
+        print("Argument --import-csv, should be used with argument --load.")
+        return
     if args.add:
         # There is no library loaded.
         print("Argument --add, should be used with argument --load.")
