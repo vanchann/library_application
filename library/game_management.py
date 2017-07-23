@@ -34,6 +34,7 @@ class GameManager(Manager):
     Method: import_csv
 
     Imports a CSV file as the XML library file.
+    Only fields listed in sortingtags are supported for now.
 
     :param str impfile: the file to import.
     :return int: 0 on success and 2 in case of error.
@@ -46,6 +47,7 @@ class GameManager(Manager):
     Method: export_csv
 
     Exports XML library file as a CSV file.
+    Only fields listed in sortingtags are supported for now.
 
     :param str expfile: the file to export.
     :return int: 0 on success and 2 in case of error.
@@ -411,6 +413,32 @@ class GameManager(Manager):
     # End of method _show_table.
 
     # Display methods.
+    """
+    Method: show_import_csv
+
+    Shows import CSV file messages.
+
+    :param str impfile: the file to import.
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def show_import_csv(self, impfile):
+        raise NotImplementedError("Method import_csv should be implemented in child class.")
+    # End of method show_import_csv.
+
+    """
+    Method: show_export_csv
+
+    Shows export CSV messages.
+
+    :param str expfile: the file to export.
+    :return int: 0 on success and 2 in case of error.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def show_export_csv(self, expfile):
+        raise NotImplementedError("Method export_csv should be implemented in child class.")
+    # End of method show_export_csv.
+
     """
     Method: show_search_elements
 
