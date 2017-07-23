@@ -215,6 +215,14 @@ class TestGameManager(unittest.TestCase):
     # End of method test_show_element_no_existing.
 
     """
+    Test function import_csv.
+    """
+    #@unittest.skip("Skipped.")
+    def test_import_csv(self):
+        self.assertEqual(self.manager.import_csv("games.csv"), 0)
+    # End of method test_import_csv.
+
+    """
     Test function export_csv.
     """
     #@unittest.skip("Skipped.")

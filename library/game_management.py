@@ -37,11 +37,40 @@ class GameManager(Manager):
     Imports a CSV file as the XML library file.
     Only fields listed in sortingtags are supported for now.
 
+    Valid CSV header:
+    Title,Shop,Finished
+
     :param str impfile: the file to import.
-    :return int: 0 on success and 2 in case of error.
+    :return int: 0 on success, 1 if CSV header is not valid and 2 in case of filesystem write error.
     """
     def import_csv(self, impfile):
-        return 2
+        try:
+            # List of games.
+            games = []
+            with open(impfile, newline="") as csvfile:
+                filereader = csv.DictReader(csvfile, quotechar="\\")
+                for row in filereader:
+                    # Create new element from elementdict.
+                    element = etree.Element(self._libtype)
+                    # Add subelements.
+                    subelement = etree.SubElement(element, "title")
+                    subelement.text = row["title".title()]
+                    subelement = etree.SubElement(element, "shop")
+                    subelement.text = row["shop".title()]
+                    subelement = etree.SubElement(element, "finished")
+                    subelement.text = row["finished".title()]
+                    # Add new element to games list.
+                    games.append(element)
+                # Write the elements to a new library file.
+                wgames = self._write_tree(games)
+                if wgames != 0:
+                    return wgames
+        except OSError:
+            return 2
+        except ValueError:
+            return 1
+        # File import was successful.
+        return 0
     # End of method import_csv.
 
     """
