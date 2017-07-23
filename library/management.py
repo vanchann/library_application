@@ -437,10 +437,11 @@ class Manager:
 
     Imports a CSV file as the XML library file.
 
+    :param str impfile: the file to import.
     :return int: 0 on success and 2 in case of error.
     :raise NotImplementedError: Method should be implemented in child class.
     """
-    def import_csv(self):
+    def import_csv(self, impfile):
         raise NotImplementedError("Method import_csv should be implemented in child class.")
     # End of method import_csv.
 
@@ -449,10 +450,11 @@ class Manager:
 
     Exports XML library file as a CSV file.
 
+    :param str expfile: the file to export.
     :return int: 0 on success and 2 in case of error.
     :raise NotImplementedError: Method should be implemented in child class.
     """
-    def export_csv(self):
+    def export_csv(self, expfile):
         raise NotImplementedError("Method export_csv should be implemented in child class.")
     # End of method export_csv.
 

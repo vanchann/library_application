@@ -35,17 +35,11 @@ class GameManager(Manager):
 
     Imports a CSV file as the XML library file.
 
+    :param str impfile: the file to import.
     :return int: 0 on success and 2 in case of error.
-    :raise NotImplementedError: Method should be implemented.
     """
-    def import_csv(self):
-        raise NotImplementedError("Method import_csv should be implemented in child class.")
-        """
-        try:
-            return 0
-        except OSError:
-            return 2
-        """
+    def import_csv(self, impfile):
+        return 2
     # End of method import_csv.
 
     """
@@ -53,17 +47,11 @@ class GameManager(Manager):
 
     Exports XML library file as a CSV file.
 
+    :param str expfile: the file to export.
     :return int: 0 on success and 2 in case of error.
-    :raise NotImplementedError: Method should be implemented.
     """
-    def export_csv(self):
-        raise NotImplementedError("Method export_csv should be implemented in child class.")
-        """
-        try:
-            return 0
-        except OSError:
-            return 2
-        """
+    def export_csv(self, expfile):
+        return 2
     # End of method export_csv.
 
     # Storage management methods.
