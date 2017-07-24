@@ -812,8 +812,11 @@ class GameManager(Manager):
             choices = range(1, 4)
             for installer in game["installer"]:
                 print("Installer:")
-                for key in installer:
-                    print("    {}: {}".format(key, installer[key]))
+                print("    System: {}".format(installer["system"]))
+                if "lastupdated" in installer:
+                    print("    Last updated: {}".format(installer["lastupdated"]))
+                if "filename" in installer:
+                    print("    File(s): {}".format(installer["filename"]))
 
                 # Display menu
                 print("1. Keep and continue")
