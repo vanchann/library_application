@@ -24,6 +24,9 @@ line gate to the application.
 run.py -h (and run.py --help) will display usage instructions.
 run.py without any command line arguments will display the application's menu.
 
+Application configuration generation and validation, as well as library import to
+and export from CSV file functionality is available only through command line arguments.
+
 This module is being developed and tested on FreeBSD and Linux (Debian stable).
 
 It should work on Windows, since code has been written in a system adaptive way,
@@ -34,7 +37,7 @@ lxml module is required. This decision has been made, to keep the application fr
 of external database dependencies. This way, the whole module may be reside and run
 from any external storage devices.
 
-XML also is a human readable markup language, so the files may be read, edited
+XML is also a human readable markup language, so the files may be read, edited
 and generally used whatever way the user would like independently of the application.
 
 I'm thinking about an online version with local XML library synchronization. Maybe
@@ -56,7 +59,7 @@ library_application/
                         utility.py
                 __init__.py
                 book_management.py    # Contains not yet implemented dummy class.
-                game_management.py    # CSV import/export is not implemented yet.
+                game_management.py
                 music_management.py   # Contains not yet implemented dummy class.
                 video_management.py   # Contains not yet implemented dummy class.
                 management.py
