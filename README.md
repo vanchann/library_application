@@ -27,8 +27,6 @@ run.py without any command line arguments will display the application's menu.
 Application configuration generation and validation, as well as library import to
 and export from CSV file functionality is available only through command line arguments.
 
-**Game Library CSV header:** Title,Shop,Finished,System
-
 This module is being developed and tested on FreeBSD and Linux (Debian stable).
 
 It should work on Windows, since code has been written in a system adaptive way,
@@ -48,6 +46,15 @@ even a GUI version.
 I'm developing this application according to my personal needs, but new ideas would
 be more than welcome.
 
+CSV FORMAT
+--------------------------------------------------------------------------------
+```
+Character set: UTF-8
+Field delimiter: ,
+Text delimiter: \
+
+Game Library CSV header: Title,Shop,Finished,System
+```
 DIRECTORY TREE BASED ON DEFAULT CONFIGURATION
 --------------------------------------------------------------------------------
 ```

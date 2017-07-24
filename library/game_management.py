@@ -37,6 +37,10 @@ class GameManager(Manager):
     Imports a CSV file as the XML library file.
     Only fields listed in sortingtags and installer element's system tag are supported.
 
+    Character set: UTF-8
+    Field delimiter: ,
+    Text delimiter: \
+
     Valid CSV header:
     Title,Shop,Finished,System
 
@@ -85,6 +89,13 @@ class GameManager(Manager):
 
     Exports XML library file as a CSV file.
     Only fields listed in sortingtags and installer element's system tag are supported.
+
+    Character set: UTF-8
+    Field delimiter: ,
+    Text delimiter: \
+
+    Valid CSV header:
+    Title,Shop,Finished,System
 
     :param str expfile: the file to export.
     :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
