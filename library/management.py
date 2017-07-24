@@ -430,6 +430,50 @@ class Manager:
         return value
     # End of method edit_element.
 
+    """
+    Method: show_import_csv
+
+    Shows import CSV file messages.
+    Valid CSV header is subclass specific.
+
+    :param str impfile: the file to import.
+    :return int: 0 on success, 1 if CSV is not valid, 2 in case of filesystem write error and 3 if XML the tree created in memory is not valid.
+    """
+    def show_import_csv(self, impfile):
+        result = 1
+        # Check if file exists.
+        if not os.path.isfile(impfile):
+            print("File {} does not exist.".format(impfile))
+            return result
+        # Import file.
+        result = self.import_csv(impfile)
+        if result == 0:
+            print("File '{}' has been imported successfully.".format(impfile))
+        elif result == 1 or result == 3:
+            print("CSV file is not valid.")
+        else:
+            print("A filesystem error occurred. Make sure you have write provileges in '{}'.".format(os.path.join(self._storageroot, self._libtype)))
+        return result
+    # End of method show_import_csv.
+
+    """
+    Method: show_export_csv
+
+    Shows export CSV messages.
+
+    :param str expfile: the file to export.
+    :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
+    """
+    def show_export_csv(self, expfile):
+        # Export file.
+        result = self.export_csv(expfile)
+        if result == 0:
+            print("File '{}' has been exported successfully.".format(expfile))
+        else:
+            print("An error occurred.")
+        return result
+    # End of method show_export_csv.
+
     # NOT implemented methods. Child class should implemented them, based on their storage settings.
     # File import and export functionality.
     """
@@ -536,48 +580,6 @@ class Manager:
     # End of method remove_element.
 
     # Display methods.
-    """
-    Method: show_import_csv
-
-    Shows import CSV file messages.
-    Valid CSV header is subclass specific.
-
-    :param str impfile: the file to import.
-    :return int: 0 on success, 1 if CSV is not valid and 2 in case of filesystem write error.
-    """
-    def show_import_csv(self, impfile):
-        result = 1
-        # Check if file exists.
-        if not os.path.isfile(impfile):
-            print("File {} does not exist.".format(impfile))
-            return result
-        # Import file.
-        result = self.import_csv(impfile)
-        if result == 0:
-            print("File '{}' has been imported successfully.".format(impfile))
-        else:
-            print("An error occurred.")
-        return result
-    # End of method show_import_csv.
-
-    """
-    Method: show_export_csv
-
-    Shows export CSV messages.
-
-    :param str expfile: the file to export.
-    :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
-    """
-    def show_export_csv(self, expfile):
-        # Export file.
-        result = self.export_csv(expfile)
-        if result == 0:
-            print("File '{}' has been exported successfully.".format(expfile))
-        else:
-            print("An error occurred.")
-        return result
-    # End of method show_export_csv.
-
     """
     Method: show_search_elements
 

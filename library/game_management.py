@@ -67,7 +67,7 @@ class GameManager(Manager):
                     return wgames
         except OSError:
             return 2
-        except ValueError:
+        except KeyError:
             return 1
         # File import was successful.
         return 0
