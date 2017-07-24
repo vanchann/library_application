@@ -27,6 +27,9 @@ run.py without any command line arguments will display the application's menu.
 Application configuration generation and validation, as well as library import to
 and export from CSV file functionality is available only through command line arguments.
 
+Valid CSV headers for each library types.
+**Game Library:** Title,Shop,Finished,System
+
 This module is being developed and tested on FreeBSD and Linux (Debian stable).
 
 It should work on Windows, since code has been written in a system adaptive way,

@@ -35,10 +35,10 @@ class GameManager(Manager):
     Method: import_csv
 
     Imports a CSV file as the XML library file.
-    Only fields listed in sortingtags are supported for now.
+    Only fields listed in sortingtags and installer element's system tag are supported.
 
     Valid CSV header:
-    Title,Shop,Finished
+    Title,Shop,Finished,System
 
     :param str impfile: the file to import.
     :return int: 0 on success, 1 if CSV header is not valid and 2 in case of filesystem write error.
@@ -54,11 +54,18 @@ class GameManager(Manager):
                     element = etree.Element(self._libtype)
                     # Add subelements.
                     subelement = etree.SubElement(element, "title")
-                    subelement.text = row["title".title()]
+                    subelement.text = row["Title"]
                     subelement = etree.SubElement(element, "shop")
-                    subelement.text = row["shop".title()]
+                    subelement.text = row["Shop"]
                     subelement = etree.SubElement(element, "finished")
-                    subelement.text = row["finished".title()]
+                    subelement.text = row["Finished"]
+                    # Add installer subelements.
+                    if row["System"] != "":
+                        systems = row["System"].split(" ")
+                        for system in systems:
+                            subelement = etree.SubElement(element, "installer")
+                            systemelement = etree.SubElement(subelement, "system")
+                            systemelement.text = system
                     # Add new element to games list.
                     games.append(element)
                 # Write the elements to a new library file.
@@ -77,7 +84,7 @@ class GameManager(Manager):
     Method: export_csv
 
     Exports XML library file as a CSV file.
-    Only fields listed in sortingtags are supported for now.
+    Only fields listed in sortingtags and installer element's system tag are supported.
 
     :param str expfile: the file to export.
     :return int: 0 on success, 1 if library file is not valid and 2 in case of error.
@@ -88,7 +95,7 @@ class GameManager(Manager):
             with open(expfile, "w", newline = "") as csvfile:
                 filewriter = csv.writer(csvfile, quotechar = "\\", quoting = csv.QUOTE_MINIMAL)
                 # Write header row.
-                filewriter.writerow([self._sortingtags[0].title(), self._sortingtags[1].title(), self._sortingtags[2].title()])
+                filewriter.writerow([self._sortingtags[0].title(), self._sortingtags[1].title(), self._sortingtags[2].title(), "System"])
                 # Get all items
                 items = self.get_all_elements()
                 # Check for errors before proceed.
@@ -96,7 +103,14 @@ class GameManager(Manager):
                     return items
                 # Write items to CSV file.
                 for item in items:
-                    filewriter.writerow([item[0].text, item[1].text, item[2].text])
+                    system = []
+                    # Check if istaller element exists.
+                    itemlength = len(item)
+                    if itemlength > 3:
+                        for i in range(3, itemlength):
+                            system.append(item[i][0].text)
+                    # Write row.
+                    filewriter.writerow([item[0].text, item[1].text, item[2].text, " ".join(system)])
         except OSError:
             return 2
         # File export was successful.
