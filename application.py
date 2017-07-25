@@ -5,7 +5,10 @@ import sys
 import platform
 import os
 from lxml import etree
+from library.book_management import BookManager
 from library.game_management import GameManager
+from library.music_management import MusicManager
+from library.video_management import VideoManager
 from library.support.utility import Utility
 
 """
@@ -49,7 +52,7 @@ class Application:
     Gets a library manager object.
 
     :param str libtype: The library type.
-    :return BooKManager_or_GameManager_or_MusicManager_or_VideoManager_or_None: Union[BooKManager, GameManager, MusicManager, VideoManager, None].
+    :return BookManager_or_GameManager_or_MusicManager_or_VideoManager_or_None: Union[BookManager, GameManager, MusicManager, VideoManager, None].
     :sys.exit 3: Unsupported library type.
     """
     def get_manager(self, libtype):
@@ -70,11 +73,14 @@ class Application:
         libschemafile =tree.find("/schema").text
 
         # Create library manager for specific library type.
-        if libtype == "game":
+        if libtype == "book":
+            manager = BookManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
+        elif libtype == "game":
             manager = GameManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
-        else:
-            print("Not yet inmplemented library type {}.".format(libtype))
-            return None
+        elif libtype == "music":
+            manager = MusicManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
+        elif libtype == "video":
+            manager = VideoManager(os.path.join(self.__rundir, "storage"), libfile, libschemafile)
         # Return managet object.
         return manager
     # End of method get_manager.
