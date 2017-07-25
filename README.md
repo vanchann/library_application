@@ -74,16 +74,16 @@ library_application/
                 management.py
         storage/
                 book/
-                        library.xml   # Will be generated programmatically by BookManager class
+                        library.xml
                         library.xsd   # Will be generated programmatically by BookManager class
                 game/
                         library.xml
                         library.xsd
                 music/
-                        library.xml   # Will be generated programmatically by MusicManager class
+                        library.xml
                         library.xsd   # Will be generated programmatically by MusicManager class
                 video/
-                        library.xml   # Will be generated programmatically by VideoManager class
+                        library.xml
                         library.xsd   # Will be generated programmatically by VideoManager class
         testing/                      # Testing is not exhaustive nor complete at this time.
                 library/
