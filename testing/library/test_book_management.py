@@ -12,29 +12,29 @@ import os
 appdir = os.path.abspath(__file__).split("/testing/")[0]
 sys.path.insert(0, appdir)
 # Import application modules.
-import library.game_management
-from library.game_management import GameManager
+import library.book_management
+from library.book_management import BookManager
 
 """
-Class: TestGameManager
+Class: TestBookManager
 
-Testcases for TestGameManager.
+Testcases for TestBookManager.
 """
-class TestGameManager(unittest.TestCase):
+class TestBookManager(unittest.TestCase):
     """
     Set up.
     """
     def setUp(self):
         # Set up path values.
-        self.storagepath = os.path.abspath(__file__).split("/testing/library/test_game_management.py")[0]
+        self.storagepath = os.path.abspath(__file__).split("/testing/library/test_book_management.py")[0]
         self.storagepath = os.path.join(self.storagepath, "storage")
 
-        self.xmlbackup = os.path.join(self.storagepath, "game", "xmlbackup.test.back")
-        self.xsdbackup = os.path.join(self.storagepath, "game", "xsdbackup.test.back")
-        self.testlibrary = os.path.join(os.path.split(os.path.abspath(__file__))[0], "test_game_library.xml")
+        self.xmlbackup = os.path.join(self.storagepath, "book", "xmlbackup.test.back")
+        self.xsdbackup = os.path.join(self.storagepath, "book", "xsdbackup.test.back")
+        self.testlibrary = os.path.join(os.path.split(os.path.abspath(__file__))[0], "test_book_library.xml")
 
-        # Initialize GameManager.
-        self.manager = GameManager(self.storagepath, "library.xml", "library.xsd")
+        # Initialize BookManager.
+        self.manager = BookManager(self.storagepath, "library.xml", "library.xsd")
 
         # Take test backup of library xml and schema.
         shutil.copy2(self.manager._xmlfile, self.xmlbackup)
@@ -65,7 +65,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements_none_element without passing in an element.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements_none_element(self):
         self.assertIsNone(self.manager.search_elements("", "Test"))
     # End of method test_search_elements_none_element.
@@ -73,7 +73,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements_no_value without passing an existing value.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements_no_value(self):
         self.assertIsNone(self.manager.search_elements("title", "_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_search_elements_no_value.
@@ -81,7 +81,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function search_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_search_elements(self):
         self.assertIsInstance(self.manager.search_elements("finished", "e"), list)
     # End of method test_search_elements.
@@ -89,7 +89,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function show_search_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_show_search_elements(self):
         originalout = sys.stdout
         out = StringIO()
@@ -98,14 +98,14 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_search_elements("finished", "e")
         sys.stdout = originalout
 
-        test = "Title  | Shop     | Finished | System-------|----------|----------|-------Test   | DRM-free | Yes      | Windows Mac Linux a      | DRM-free | Yes      | Nofile | Free     | Yes      | Other Linux "
+        test = ""
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method show_search_elements.
 
     """
     Test function get_all_elements using default order.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_get_all_elements_default_order(self):
         self.assertIsInstance(self.manager.get_all_elements(), list)
     # End of method test_get_all_elements_default_order.
@@ -113,7 +113,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function show_all_elements.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_show_all_elements(self):
         originalout = sys.stdout
         out = StringIO()
@@ -122,14 +122,14 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_all_elements()
         sys.stdout = originalout
 
-        test = "Title  | Shop     | Finished | System-------|----------|----------|-------a      | DRM-free | Yes      | A      | DRM-free | No       | Nofile | Free     | Yes      | Other Linux Test   | DRM-free | Yes      | Windows Mac Linux Test1  | DRM-free | No       | "
+        test = ""
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_all_elements.
 
     """
     Test function get_element using an element which does not exist.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_get_element_non_existent(self):
         self.assertIsNone(self.manager.get_element("_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_get_element_non_existent.
@@ -137,7 +137,7 @@ class TestGameManager(unittest.TestCase):
     """
     Test function get_element using an element which exists.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_get_element_existent(self):
         self.assertIsInstance(self.manager.get_element("Test"), _Element)
     # End of method test_get_element_existent.
@@ -145,42 +145,41 @@ class TestGameManager(unittest.TestCase):
     """
     Test function add_element_invalid_dict.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_add_element_invalid_dict(self):
         self.assertEqual(self.manager.add_element({"titlE": "Dict", "shop": "Free", "finished": "No"}), 1)
     # End of method test_add_element_invalid_dict.
 
     """
-    Test function add_element without installer.
+    Test function add_element without optional elements.
     """
-    #@unittest.skip("Skipped.")
-    def test_add_element_no_installer(self):
+    @unittest.skip("Skipped.")
+    def test_add_element_no_optional(self):
         self.assertEqual(self.manager.add_element({"title": "Dict", "shop": "Free", "finished": "No"}), 0)
-    # End of method test_add_element_no_installer.
+    # End of method test_add_element_no_optional.
 
     """
-    Test function add_element with installer.
+    Test function add_element with optional elements.
     """
-    #@unittest.skip("Skipped.")
-    def test_add_element_with_installer(self):
-        game = {"title": "Dict installer", "shop": "Free", "finished": "No",
-                "installer": [{"system": "Mac", "filename": ["file1", "file2"]}]}
-        self.assertEqual(self.manager.add_element(game), 0)
-    # End of method test_add_element_with_installer.
+    @unittest.skip("Skipped.")
+    def test_add_element_with_optional(self):
+        book = {}
+        self.assertEqual(self.manager.add_element(book), 0)
+    # End of method test_add_element_with_optional.
 
     """
     Test function remove_element.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_remove_element(self):
-        self.assertEqual(self.manager.remove_element("Nofile"), 0)
+        self.assertEqual(self.manager.remove_element(""), 0)
     # End of method test_remove_element.
 
     """
     Test function show_element with existing item.
     """
-    #@unittest.skip("Skipped.")
-    @patch.object(library.game_management, "input", create = True)
+    @unittest.skip("Skipped.")
+    @patch.object(library.book_management, "input", create = True)
     def test_show_element_existing(self, input):
         input.return_value = "Test"
 
@@ -191,15 +190,15 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_element()
         sys.stdout = originalout
 
-        test = "Exact match will be made!Game:    Title: Test    Shop: DRM-free    Finished: Yes    Installer:         System: Windows        Lastupdated: 2017-07-14        Filename: win_file_1        Filename: win_file_2        Filename: win_file_3    Installer:         System: Mac        Filename: mac_file_1        Filename: mac_file_2    Installer:         System: Linux        Filename: lin_file_1        Filename: lin_file_2"
+        test = "Exact match will be made!"
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_existing.
 
     """
     Test function show_element with no existing item.
     """
-    #@unittest.skip("Skipped.")
-    @patch.object(library.game_management, "input", create = True)
+    @unittest.skip("Skipped.")
+    @patch.object(library.book_management, "input", create = True)
     def test_show_element_no_existing(self, input):
         input.return_value = "TesT"
 
@@ -210,26 +209,26 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_element()
         sys.stdout = originalout
 
-        test = "Exact match will be made!No game with title TesT found."
+        test = "Exact match will be made!No book with title TesT found."
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_no_existing.
 
     """
     Test function import_csv.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_import_csv(self):
-        self.assertEqual(self.manager.import_csv("games.csv"), 0)
+        self.assertEqual(self.manager.import_csv("books.csv"), 0)
     # End of method test_import_csv.
 
     """
     Test function export_csv.
     """
-    #@unittest.skip("Skipped.")
+    @unittest.skip("Skipped.")
     def test_export_csv(self):
-        self.assertEqual(self.manager.export_csv("games.csv"), 0)
+        self.assertEqual(self.manager.export_csv("books.csv"), 0)
     # End of method test_export_csv.
-# End of class TestGameManager.
+# End of class TestBookManager.
 
 # Test running or loading.
 if __name__ == "__main__":

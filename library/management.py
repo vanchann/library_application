@@ -515,6 +515,7 @@ class Manager:
         raise NotImplementedError("Method restore_schema should be implemented in child class.")
     # End of method restore_schema.
 
+    # Element manipulation methods.
     """
     Method: search_elements
 
@@ -529,7 +530,6 @@ class Manager:
         raise NotImplementedError("Method search_elements should be implemented in child class.")
     # End of method search_elements.
 
-    # Element manipulation methods.
     """
     Method: get_all_elements
 

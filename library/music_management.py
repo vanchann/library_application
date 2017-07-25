@@ -3,6 +3,7 @@
 # imports
 import os
 import sys
+import csv
 from lxml import etree
 from library.management import Manager
 from library.support.utility import Utility

@@ -67,7 +67,7 @@ library_application/
                         __init__.py
                         utility.py
                 __init__.py
-                book_management.py    # Contains not yet implemented dummy class.
+                book_management.py    # Under active development.
                 game_management.py
                 music_management.py   # Contains not yet implemented dummy class.
                 video_management.py   # Contains not yet implemented dummy class.
@@ -75,7 +75,7 @@ library_application/
         storage/
                 book/
                         library.xml
-                        library.xsd   # Will be generated programmatically by BookManager class
+                        library.xsd
                 game/
                         library.xml
                         library.xsd

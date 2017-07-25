@@ -115,7 +115,7 @@ class GameManager(Manager):
                 # Write items to CSV file.
                 for item in items:
                     system = []
-                    # Check if istaller element exists.
+                    # Check if installer element exists.
                     itemlength = len(item)
                     if itemlength > 3:
                         for i in range(3, itemlength):
@@ -234,6 +234,7 @@ class GameManager(Manager):
             return 2
     # End of method restore_schema.
 
+    # Element manipulation methods.
     """
     Method: search_elements
 
@@ -268,7 +269,6 @@ class GameManager(Manager):
             return None
     # End of method search_elements.
 
-    # Element manipulation methods.
     """
     Method: get_all_elements
 

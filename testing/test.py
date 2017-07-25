@@ -4,6 +4,7 @@
 import unittest
 # Import testing modules.
 from test_run import TestRunModule
+from testing.library.test_book_management import TestBookManager
 from testing.library.test_game_management import TestGameManager
 
 # Test running or loading.
