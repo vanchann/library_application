@@ -216,7 +216,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function import_csv.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_import_csv(self):
         self.assertEqual(self.manager.import_csv("books.csv"), 0)
     # End of method test_import_csv.
@@ -224,7 +224,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function export_csv.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_export_csv(self):
         self.assertEqual(self.manager.export_csv("books.csv"), 0)
     # End of method test_export_csv.

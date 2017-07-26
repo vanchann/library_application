@@ -122,6 +122,9 @@ class BookManager(Manager):
                 # Check for errors before proceed.
                 if isinstance(items, int):
                     return items
+                # Check if library is empty.
+                if items is None:
+                    return 0
                 # Write items to CSV file.
                 for item in items:
                     authors = []
@@ -415,7 +418,6 @@ class BookManager(Manager):
         else:
             return None
     # End of method get_element.
-
 # End of class BookManager.
 
 # The following section contains code to execute when script is run from the command line.

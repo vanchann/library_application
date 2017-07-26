@@ -112,6 +112,9 @@ class GameManager(Manager):
                 # Check for errors before proceed.
                 if isinstance(items, int):
                     return items
+                # Check if library is empty.
+                if items is None:
+                    return 0
                 # Write items to CSV file.
                 for item in items:
                     system = []
@@ -329,56 +332,6 @@ class GameManager(Manager):
         else:
             return None
     # End of method get_element.
-
-    """
-    Method: _write_tree
-
-    Adds nodes to tree and writes it to file.
-
-    :param list nodes: The list of etree.Element nodes.
-    :return int: 0 on success, 2 on write file error and 3 on validation error.
-    """
-    def _write_tree(self, nodes):
-            # Create the xml tree.
-            root = etree.XML("""
-<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="{}"></library>
-            """.format(os.path.basename(self._xsdfile)))
-            for node in nodes:
-                root.append(node)
-            # Generate new tree.
-            xmlout = etree.ElementTree(root)
-            # Validate tree.
-            if Utility.validate_tree(self._xsdfile, xmlout) != 0:
-                return 3
-            # Write to file.
-            try:
-                xmlout.write(self._xmlfile, xml_declaration = True, encoding = "UTF-8", pretty_print = True)
-                return 0
-            except OSError:
-                return 2
-    # End of method _write_tree.
-
-    """
-    Method: _add_element_to_tree
-
-    Adds new element to tree nodes.
-
-    :param etree.Element element: The element to be added.
-    :return int: 0 on success, 2 on write file error and 3 on validation error.
-    """
-    def _add_element_to_tree(self, element):
-            # Create xml tree.
-            tree = etree.parse(self._xmlfile)
-            # Get a list of all elements.
-            nodes = tree.xpath("/library/{}".format(self._libtype))
-            # Append to lis.
-            nodes.append(element)
-            # Sort elements list by title.
-            index = self._sortingtags.index("title")
-            nodes.sort(key = lambda element: element[index].text.title())
-            # Write to file.
-            return self._write_tree(nodes)
-    # End of method _add_element_to_tree.
 
     """
     Method: add_element
