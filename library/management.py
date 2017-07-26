@@ -19,7 +19,7 @@ class Manager:
     """
     Initializer
     """
-    def __init__(self, storageroot, libfile, schemafile, libtype, sortingtags):
+    def __init__(self, storageroot, libfile, schemafile, libtype, sortingtags, uniquekey):
         super().__init__()
         # Initialize library variables.
         self._storageroot = storageroot
@@ -27,6 +27,7 @@ class Manager:
         self._xmlfile = os.path.join(self._storageroot, self._libtype, libfile)
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
         self._sortingtags = sortingtags
+        self._uniquekey = uniquekey
     # End of initializer.
 
     # Implemented methods, whis may be called from a Manager instance object.
@@ -47,7 +48,7 @@ class Manager:
             # Display menu
             print("Available actions for library {}:".format(self._libtype.upper()))
             print("1. Display all items")
-            print("2. Display item by unique value")
+            print("2. Display item by {}".format(self._uniquekey))
             print("3. Search for items")
             print("4. Add new item")
             print("5. Edit existing item")
@@ -430,6 +431,183 @@ class Manager:
         return value
     # End of method edit_element.
 
+    # Display methods.
+    """
+    Method: show_search_elements
+
+    Shows elements of a search result.
+
+    :param str element[=None]: The element tag containing the value. Should be in _sortingtags list.
+    :param str value[=None]: The value inside element tag to search for.
+    :param bool ascending[=True]: The order to sort the results.
+    """
+    def show_search_elements(self, element = None, value = None, ascending = True):
+        menu = None
+        # Get all elements
+        if element is None:
+            menu = True
+            # Get user input.
+            element = self.get_sorting_element()
+            value = input("Enter a value to search for: ")
+            elements = self.search_elements(element, value, self.get_sorting_order())
+            Utility.clear()
+        else:
+            elements = self.search_elements(element, value, ascending)
+        # Display results
+        if isinstance(elements, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        elif elements is None:
+            print("No item with '{}' containing '{}' has benn found.".format(element.title(), value))
+        else:
+            # Show table of results.
+            self.show_table(elements)
+        # Pause if the method has been called without an element.
+        if menu:
+            print()
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_search_elements.
+
+    """
+    Method: show_all_elements
+
+    Shows all elements.
+
+    :param str element[=None]: The element tag on which show will be based. Should be in _sortingtags list.
+    :param bool ascending[=True]: The order to sort the results.
+    :param bool menu[=None]: Display menu.
+    """
+    def show_all_elements(self, element = None, ascending = True, menu = None):
+        # Get all elements
+        if menu is None:
+            elements = self.get_all_elements(element, ascending)
+        else:
+            # Get user input.
+            elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
+            Utility.clear()
+        # Display results
+        if isinstance(elements, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        elif elements is None:
+            print("The library is empty.")
+        else:
+            # Show table of results.
+            self.show_table(elements)
+        # Pause if the method has been called without an element.
+        if menu is not None:
+            print()
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_all_elements.
+
+    """
+    Method: show_add_element
+
+    Shows messages about new element's addition.
+
+    :param str element[=None]: The python dictionary containing the values of the element to be added to library.
+    :raise NotImplementedError: Through methods add_element or _generate_libtype_element, if at least one of them is not implemented in child class.
+    """
+    def show_add_element(self, element = None):
+        menu = None
+        # Get the element from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+            # Generate new element.
+            element = self._generate_libtype_element()
+            # Return if element is still None.
+            if element is None:
+                input("Press 'Enter' to return to menu: ")
+                return
+
+            print("Adding item:")
+            print(element)
+            answer = Utility.get_answer_yn("Add item?")
+            # User wants to quit.
+            if answer == "n":
+                return
+
+        # Add item.
+        if self.add_element(element) == 0:
+            print("The item {} has been added successfully.".format(element))
+        else:
+            print("The item {} has not been added.".format(element))
+
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_add_element.
+
+    """
+    Method: show_edit_element
+
+    Shows element's editing messages.
+
+    :param str element[=None]: The python dictionary containing the values of the element to be edited.
+    :raise NotImplementedError: Through methods get_element or _xmlitem_to_dict or _generate_libtype_element, if at least one of them is not implemented in child class.
+    """
+    def show_edit_element(self, element = None):
+        menu = None
+        # Get the element's unique key from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+            element = input("Enter the {} of the item to be edited: ".format(self._uniquekey))
+        # Get element.
+        item = self.get_element(element)
+        if item is None:
+            print("No item with {} '{}' found.".format(self._uniquekey, element))
+        elif isinstance(item, int):
+            print("Invalid storage file {}.".format(self._xmlfile))
+        else:
+            # Create python dictionary parsing element's values.
+            itemdict = self._xmlitem_to_dict(item)
+            # Edit item.
+            itemdict = self._generate_libtype_element(itemdict)
+            # Check if itemdict contains values.
+            if itemdict is not None:
+                #confirm before save.
+                print("Saving item:")
+                print(itemdict)
+                answer = Utility.get_answer_yn("Save item?")
+                # User wants to quit.
+                if answer == "n":
+                    return
+                # Persist changes.
+                try:
+                    if self.edit_element(element, itemdict) == 0:
+                        print("The edited item {} has been saved successfully.".format(element))
+                    else:
+                        print("The edited item {} has not been saved.".format(element))
+                except OSError:
+                    print("Temporary file ha not been removed, after the edited item {} has been saved.".format(element))
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_edit_element.
+
+    """
+    Method: show_remove_element
+
+    Shows messages about element's removal.
+
+    :param str element[=None]: The exact value in element title.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def show_remove_element(self, element = None):
+        menu = None
+        # Get the element's title from the user.
+        if element is None:
+            menu = True
+            Utility.clear()
+            element = input("Enter the {} of the item to be removed: ".format(self._uniquekey))
+        # Remove item.
+        if self.remove_element(element) == 0:
+            print("The item {} has been removed successfully.".format(element))
+        else:
+            print("The item {} has not been removed.".format(element))
+
+        if menu:
+            input("Press 'Enter' to return to menu: ")
+    # End of method show_remove_element.
+
     """
     Method: show_import_csv
 
@@ -474,7 +652,7 @@ class Manager:
         return result
     # End of method show_export_csv.
 
-    # Utility methods, which meant to be called only form inside Managerclass or its subclasses.
+    # Utility methods, which meant to be called only form inside Manager class or its subclasses.
     # Like protected methods in other languages.
     """
     Method: _write_tree
@@ -528,6 +706,35 @@ class Manager:
     # End of method _add_element_to_tree.
 
     # NOT implemented methods. Child class should implemented them, based on their storage settings.
+    # Utility methods, which meant to be called only form inside Manager class or its subclasses.
+    # Like protected methods in other languages.
+    """
+    Method: _xmlitem_to_dict
+
+    Generates python dictionary from dictionary XML element.
+
+    :param etree.Element element: The XML element node.
+    :return dict: The python dictionary version of the XML node.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def _xmlitem_to_dict(self, element):
+        raise NotImplementedError("Method _xmlitem_to_dict should be implemented in child class.")
+    # End of method _xmlitem_to_dict.
+
+    """
+    Method: _generate_libtype_element
+
+    Generate library type python dictionary.
+
+    :param dict element[=None]: The python dictionary containing the values of the element.
+    :return dict: The python dictionary containing new values.
+    :raise NotImplementedError: Method should be implemented in child class.
+    """
+    def _generate_libtype_element(self, element = None):
+        raise NotImplementedError("Method _generate_libtype_element should be implemented in child class.")
+    # End of method _generate_libtype_element.
+
+
     # File import and export functionality.
     """
     Method: import_csv
@@ -634,32 +841,16 @@ class Manager:
 
     # Display methods.
     """
-    Method: show_search_elements
+    Method: show_table
 
-    Shows elements of a search result.
+    Shows table of elements.
 
-    :param str element[=None]: The element tag containing the value. Should be in _sortingtags list.
-    :param str value[=None]: The value inside element tag to search for.
-    :param bool ascending[=True]: The order to sort the results.
+    :param list elements: List of etree.Element to be shown.
     :raise NotImplementedError: Method should be implemented in child class.
     """
-    def show_search_elements(self, element = None, value = None, ascending = True):
+    def show_table(self, elements):
         raise NotImplementedError("Method show_search_elements should be implemented in child class.")
-    # End of method show_search_elements.
-
-    """
-    Method: show_all_elements
-
-    Shows all elements.
-
-    :param str element[=None]: The element tag on which show will be based. Should be in _sortingtags list.
-    :param bool ascending[=True]: The order to sort the results.
-    :param bool menu[=None]: Display menu.
-    :raise NotImplementedError: Method should be implemented in child class.
-    """
-    def show_all_elements(self, element = None, ascending = True, menu = None):
-        raise NotImplementedError("Method show_all_elements should be implemented in child class.")
-    # End of method show_all_elements.
+    # End of method show_table.
 
     """
     Method: show_element
@@ -672,42 +863,6 @@ class Manager:
     def show_element(self, value = None):
         raise NotImplementedError("Method show_element should be implemented in child class.")
     # End of method show_element.
-
-    """
-    Method: show_add_element
-
-    Shows messages about new element's addition.
-
-    :param str element[=None]: The python dictionary containing the values of the element to be added to library.
-    :raise NotImplementedError: Method should be implemented in child class.
-    """
-    def show_add_element(self, element = None):
-        raise NotImplementedError("Method show_add_element should be implemented in child class.")
-    # End of method show_add_element.
-
-    """
-    Method: show_edit_element
-
-    Shows element's editing messages.
-
-    :param str element[=None]: The python dictionary containing the values of the element to be edited.
-    :raise NotImplementedError: Method should be implemented in child class.
-    """
-    def show_edit_element(self, element = None):
-        raise NotImplementedError("Method show_edit_element should be implemented in child class.")
-    # End of method show_edit_element.
-
-    """
-    Method: show_remove_element
-
-    Shows messages about element's removal.
-
-    :param str element[=None]: The exact value in element tag. Tag text should be unique.
-    :raise NotImplementedError: Method should be implemented in child class.
-    """
-    def show_remove_element(self, element = None):
-        raise NotImplementedError("Method show_remove_element should be implemented in child class.")
-    # End of method show_remove_element.
 # End of class Manager.
 
 # The following section contains code to execute when script is run from the command line.

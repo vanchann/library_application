@@ -1,2 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="library.xsd"/>
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="library.xsd"><book>
+        <title>Test</title>
+        <authors>
+            <author>Someone</author>
+            <author>Elseone</author>
+        </authors>
+        <category>Programming</category>
+        <formats>
+            <format>Hardback</format>
+            <format>eBook</format>
+        </formats>
+        <isbn>1234567890123</isbn>
+        <pagenumber>100</pagenumber>
+        <lastpageread>10</lastpageread>
+        <shop>Shop</shop>
+        <finished>Yes</finished>
+    </book>
+    <book>
+        <title>Test</title>
+        <authors>
+            <author>Other</author>
+        </authors>
+        <category>Programming</category>
+        <formats>
+            <format>Hardback</format>
+            <format>eBook</format>
+        </formats>
+        <isbn>1234567890124</isbn>
+        <finished>Yes</finished>
+    </book>
+</library>

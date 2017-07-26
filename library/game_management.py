@@ -26,8 +26,10 @@ class GameManager(Manager):
         libtype = "game"
         # Allow sorting element tags.
         sortingtags = ["title", "shop", "finished"]
+        # Unique key.
+        uniquekey = "title"
         # Call parent initializer.
-        super().__init__(storageroot, libfile, schemafile, libtype, sortingtags)
+        super().__init__(storageroot, libfile, schemafile, libtype, sortingtags, uniquekey)
     # End of initializer.
 
     # File import and export functionality.
@@ -397,22 +399,20 @@ class GameManager(Manager):
         node = tree.xpath("/library/{0}/title[text()='{1}']/ancestor::{0}".format(self._libtype, element))
         if not node:
             return 1
-        nodes.remove(node[0])
         # Remove element's node.
-        #nodes = node.getparent()
-        #nodes.remove(node)
+        nodes.remove(node[0])
         # Write to file.
         return self._write_tree(nodes)
     # End of method remove_element.
 
     """
-    Method: _show_table
+    Method: show_table
 
     Shows table of elements.
 
     :param list elements: List of etree.Element to be shown.
     """
-    def _show_table(self, elements):
+    def show_table(self, elements):
         # Calculate max column widths.
         titlewidth = 5
         shopwidth = 4
@@ -435,75 +435,9 @@ class GameManager(Manager):
                 if subitem.tag == "installer":
                     print("{} ".format(subitem[0].text.strip()), end = "")
             print()
-    # End of method _show_table.
+    # End of method show_table.
 
     # Display methods.
-    """
-    Method: show_search_elements
-
-    Shows elements of a search result.
-
-    :param str element[=None]: The element tag containing the value. Should be in _sortingtags list.
-    :param str value[=None]: The value inside element tag to search for.
-    :param bool ascending[=True]: The order to sort the results.
-    """
-    def show_search_elements(self, element = None, value = None, ascending = True):
-        menu = None
-        # Get all elements
-        if element is None:
-            menu = True
-            # Get user input.
-            element = self.get_sorting_element()
-            value = input("Enter a value to search for: ")
-            elements = self.search_elements(element, value, self.get_sorting_order())
-            Utility.clear()
-        else:
-            elements = self.search_elements(element, value, ascending)
-        # Display results
-        if isinstance(elements, int):
-            print("Invalid storage file {}.".format(self._xmlfile))
-        elif elements is None:
-            print("No item with '{}' containing '{}' has benn found.".format(element.title(), value))
-        else:
-            # Show table of results.
-            self._show_table(elements)
-        # Pause if the method has been called without an element.
-        if menu:
-            print()
-            input("Press 'Enter' to return to menu: ")
-    # End of method show_search_elements.
-
-    """
-    Method: show_all_elements
-
-    Shows all elements.
-
-    :param str element[=None]: The element tag on which show will be based. Should be in _sortingtags list.
-    :param bool ascending[=True]: The order to sort the results.
-    :param bool menu[=None]: Display menu.
-    """
-    def show_all_elements(self, element = None, ascending = True, menu = None):
-        # Get all elements
-        if menu is None:
-            elements = self.get_all_elements(element, ascending)
-        else:
-            # Get user input.
-            elements = self.get_all_elements(self.get_sorting_element(), self.get_sorting_order())
-            Utility.clear()
-        # Display results
-        if isinstance(elements, int):
-            print("Invalid storage file {}.".format(self._xmlfile))
-        elif elements is None:
-            print("The library is empty.")
-        else:
-            # Show table of results.
-            self._show_table(elements)
-        # Pause if the method has been called without an element.
-        if menu is not None:
-            print()
-            input("Press 'Enter' to return to menu: ")
-    # End of method show_all_elements.
-
     """
     Method: show_element
 
@@ -549,111 +483,14 @@ class GameManager(Manager):
     # End of method show_element.
 
     """
-    Method: show_add_element
-
-    Shows messages about new element's addition.
-
-    Python dictionary form:
-    {
-        "title": "", "shop": "", "finished": "Yes/No",
-        "installer": [
-            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
-        ]
-    }
-
-    :param str element[=None]: The python dictionary containing the values of the element to be added to library.
-    """
-    def show_add_element(self, element = None):
-        menu = None
-        # Get the element's title from the user.
-        if element is None:
-            menu = True
-            Utility.clear()
-            # Generate new element.
-            element = self._generate_game()
-            # Return if element is still None.
-            if element is None:
-                input("Press 'Enter' to return to menu: ")
-                return
-
-            print("Adding item:")
-            print(element)
-            answer = Utility.get_answer_yn("Add item?")
-            # User wants to quit.
-            if answer == "n":
-                return
-
-        # Add item.
-        if self.add_element(element) == 0:
-            print("The item {} has been added successfully.".format(element))
-        else:
-            print("The item {} has not been added.".format(element))
-
-        if menu:
-            input("Press 'Enter' to return to menu: ")
-    # End of method show_add_element.
-
-    """
-    Method: show_edit_element
-
-    Shows element's editing messages.
-
-    Python dictionary form:
-    {
-        "title": "", "shop": "", "finished": "Yes/No",
-        "installer": [
-            {"system": "", "lastupdated": "YYYY-MM-DD", "filename": [""]}
-        ]
-    }
-
-    :param str element[=None]: The python dictionary containing the values of the element to be edited.
-    """
-    def show_edit_element(self, element = None):
-        menu = None
-        # Get the element's title from the user.
-        if element is None:
-            menu = True
-            Utility.clear()
-            element = input("Enter the title of the item to be edited: ")
-        # Get element.
-        game = self.get_element(element)
-        if game is None:
-            print("No game with title {} found.".format(element))
-        elif isinstance(game, int):
-            print("Invalid storage file {}.".format(self._xmlfile))
-        else:
-            # Create python dictionary parsing element's values.
-            gamedict = self._xmlgame_to_dict(game)
-            # Edit game.
-            gamedict = self._generate_game(gamedict)
-            #confirm before save.
-            print("Saving item:")
-            print(gamedict)
-            answer = Utility.get_answer_yn("Save item?")
-            # User wants to quit.
-            if answer == "n":
-                return
-            # Persist changes.
-            try:
-                if self.edit_element(element, gamedict) == 0:
-                    print("The edited item {} has been saved successfully.".format(element))
-                else:
-                    print("The edited item {} has not been saved.".format(element))
-            except OSError:
-                print("Temporary file ha not been removed, after the edited item {} has been saved.".format(element))
-        if menu:
-            input("Press 'Enter' to return to menu: ")
-    # End of method show_edit_element.
-
-    """
-    Method: _xmlgame_to_dict
+    Method: _xmlitem_to_dict
 
     Generates python dictionary from game xml element.
 
     :param etree.Element element: The game element node.
     :return dict: The python dictionary version of the XML node.
     """
-    def _xmlgame_to_dict(self, element):
+    def _xmlitem_to_dict(self, element):
         # Create python dictionary parsing element's values.
         gamedict = {}
         installer = []
@@ -681,34 +518,10 @@ class GameManager(Manager):
             gamedict["installer"] = installer
 
         return gamedict
-    # End of method _xmlgame_to_dict.
+    # End of method _xmlitem_to_dict.
 
     """
-    Method: show_remove_element
-
-    Shows messages about element's removal.
-
-    :param str element[=None]: The exact value in element title.
-    """
-    def show_remove_element(self, element = None):
-        menu = None
-        # Get the element's title from the user.
-        if element is None:
-            menu = True
-            Utility.clear()
-            element = input("Enter the title of the item to be removed: ")
-        # Remove item.
-        if self.remove_element(element) == 0:
-            print("The item {} has been removed successfully.".format(element))
-        else:
-            print("The item {} has not been removed.".format(element))
-
-        if menu:
-            input("Press 'Enter' to return to menu: ")
-    # End of method show_remove_element.
-
-    """
-    Method: _generate_game
+    Method: _generate_libtype_element
 
     Generate game python dictionary.
 
@@ -720,48 +533,53 @@ class GameManager(Manager):
         ]
     }
 
-    :param dict game[=None]: The python dictionary containing the values of the element.
+    :param dict element[=None]: The python dictionary containing the values of the element.
     :return dict: The python dictionary containing new values.
     """
-    def _generate_game(self, game = None):
+    def _generate_libtype_element(self, element = None):
         # Display header.
-        if game is None:
+        if element is None:
             print("New", end = " ")
-            game = {"title": None, "shop": None, "finished": None}
+            element = {"title": None, "shop": None, "finished": None}
         print("Game Editor")
         print()
         # Get game's elements.
         title = ""
         while title == "":
-            title = input("Title{}: ".format("" if game["title"] is None else "[" + game["title"] + "]"))
-            if game["title"] is not None and title == "":
-                title = game["title"]
+            title = input("Title{}: ".format("" if element["title"] is None else "[" + element["title"] + "]"))
+            if element["title"] is not None and title == "":
+                title = element["title"]
         # Exit editor if the user is trying to create a game, which already exists.
-        if game["title"] is None and self.get_element(title) is not None:
+        if element["title"] is None and self.get_element(title) is not None:
             print("Game {} already exists.".format(title))
             return None
+        # Exit editor if new title already exists.
+        if element["title"] is not None:
+            if title != element["title"] and self.get_element(title) is not None:
+                print("Title '{}' has already been used for a game.".format(title))
+                return None
 
-        game["title"] = title
+        element["title"] = title
 
         shop = ""
         while shop == "":
-            shop = input("Shop{}: ".format("" if game["shop"] is None else "[" + game["shop"] + "]"))
-            if game["shop"] is not None and shop == "":
-                shop = game["shop"]
-        game["shop"] = shop
+            shop = input("Shop{}: ".format("" if element["shop"] is None else "[" + element["shop"] + "]"))
+            if element["shop"] is not None and shop == "":
+                shop = element["shop"]
+        element["shop"] = shop
 
-        finished = Utility.get_answer_yn("Finished{}:".format("" if game["finished"] is None else "[" + game["finished"] + "]"))
+        finished = Utility.get_answer_yn("Finished{}:".format("" if element["finished"] is None else "[" + element["finished"] + "]"))
         if finished == "y":
-            game["finished"] = "Yes"
+            element["finished"] = "Yes"
         else:
-            game["finished"] = "No"
+            element["finished"] = "No"
 
         # Get game's installer elements.
         if Utility.get_answer_yn("Open installer editor?") == "y":
-            game = self._generate_installer(game)
+            element = self._generate_installer(element)
         # Return game dictionary.
-        return game
-    # End of method _generate_game.
+        return element
+    # End of method _generate_libtype_element.
 
     """
     Method: _generate_installer
@@ -997,7 +815,6 @@ class GameManager(Manager):
         # Add new filenames.
         fnames = []
         filename = "Enter Loop"
-        #print(filename != "")
         while filename != "":
             filename = input("Add filename [leave empty to stop]: ")
             filename = filename.strip()

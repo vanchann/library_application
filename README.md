@@ -53,6 +53,7 @@ Character set: UTF-8
 Field delimiter: ,
 Text delimiter: \
 
+Book Library CSV header: Title,Author,Category,Format,ISBN,Finished
 Game Library CSV header: Title,Shop,Finished,System
 ```
 DIRECTORY TREE BASED ON DEFAULT CONFIGURATION
@@ -67,8 +68,8 @@ library_application/
                         __init__.py
                         utility.py
                 __init__.py
-                book_management.py    # Under active development.
-                game_management.py
+                book_management.py    # Implemented, but still under test.
+                game_management.py    # Implemented, but still under test.
                 music_management.py   # Contains not yet implemented dummy class.
                 video_management.py   # Contains not yet implemented dummy class.
                 management.py
@@ -88,6 +89,9 @@ library_application/
         testing/                      # Testing is not exhaustive nor complete at this time.
                 library/
                         __init__.py
+                        test_book_library.xml
+                        test_book_management.py
+                        test_game_library.xml
                         test_game_management.py
                 __init__.py
                 test_run.py

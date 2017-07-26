@@ -65,7 +65,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function search_elements_none_element without passing in an element.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_search_elements_none_element(self):
         self.assertIsNone(self.manager.search_elements("", "Test"))
     # End of method test_search_elements_none_element.
@@ -73,7 +73,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function search_elements_no_value without passing an existing value.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_search_elements_no_value(self):
         self.assertIsNone(self.manager.search_elements("title", "_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_search_elements_no_value.
@@ -81,7 +81,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function search_elements using default order.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_search_elements(self):
         self.assertIsInstance(self.manager.search_elements("finished", "e"), list)
     # End of method test_search_elements.
@@ -89,7 +89,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function show_search_elements using default order.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_show_search_elements(self):
         originalout = sys.stdout
         out = StringIO()
@@ -98,14 +98,17 @@ class TestBookManager(unittest.TestCase):
         self.manager.show_search_elements("finished", "e")
         sys.stdout = originalout
 
-        test = ""
+        test = "Title | Author           | Category    | Format          | Isbn          | Finished\
+------|------------------|-------------|-----------------|---------------|---------\
+Test  | Someone, Elseone | Programming | Hardback, eBook | 1234567890123 | Yes     \
+Test  | Other            | Programming | Hardback, eBook | 1234567890124 | Yes     "
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method show_search_elements.
 
     """
     Test function get_all_elements using default order.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_get_all_elements_default_order(self):
         self.assertIsInstance(self.manager.get_all_elements(), list)
     # End of method test_get_all_elements_default_order.
@@ -113,7 +116,7 @@ class TestBookManager(unittest.TestCase):
     """
     Test function show_all_elements.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_show_all_elements(self):
         originalout = sys.stdout
         out = StringIO()
@@ -122,14 +125,17 @@ class TestBookManager(unittest.TestCase):
         self.manager.show_all_elements()
         sys.stdout = originalout
 
-        test = ""
+        test = "Title | Author           | Category    | Format          | Isbn          | Finished\
+------|------------------|-------------|-----------------|---------------|---------\
+Test  | Someone, Elseone | Programming | Hardback, eBook | 1234567890123 | Yes     \
+Test  | Other            | Programming | Hardback, eBook | 1234567890124 | Yes     "
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_all_elements.
 
     """
     Test function get_element using an element which does not exist.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_get_element_non_existent(self):
         self.assertIsNone(self.manager.get_element("_/T\_ NOT EXISTS TEST _/T\_"))
     # End of method test_get_element_non_existent.
@@ -137,51 +143,58 @@ class TestBookManager(unittest.TestCase):
     """
     Test function get_element using an element which exists.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_get_element_existent(self):
-        self.assertIsInstance(self.manager.get_element("Test"), _Element)
+        self.assertIsInstance(self.manager.get_element("1234567890124"), _Element)
     # End of method test_get_element_existent.
 
     """
     Test function add_element_invalid_dict.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_add_element_invalid_dict(self):
-        self.assertEqual(self.manager.add_element({"titlE": "Dict", "shop": "Free", "finished": "No"}), 1)
+        self.assertEqual(self.manager.add_element({
+            "title": "A", "authors": ["A"], "category": "A", "format": ["eBook"], "isbn": "1234567890987",
+            "publicationdate": "2017-03-31", "publisher": "A", "edition": "6",
+            "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"
+        }), 1)
     # End of method test_add_element_invalid_dict.
 
     """
     Test function add_element without optional elements.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_add_element_no_optional(self):
-        self.assertEqual(self.manager.add_element({"title": "Dict", "shop": "Free", "finished": "No"}), 0)
+        self.assertEqual(self.manager.add_element({
+            "title": "A", "authors": ["A"], "category": "A", "formats": ["eBook"], "isbn": "1234567890987", "finished": "No"}), 0)
     # End of method test_add_element_no_optional.
 
     """
     Test function add_element with optional elements.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_add_element_with_optional(self):
-        book = {}
+        book = {"title": "A", "authors": ["A", "B"], "category": "A", "formats": ["Other","eBook"], "isbn": "1234567890987",
+                "publicationdate": "2017-03-31", "publisher": "A", "edition": "2",
+                "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"}
         self.assertEqual(self.manager.add_element(book), 0)
     # End of method test_add_element_with_optional.
 
     """
     Test function remove_element.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     def test_remove_element(self):
-        self.assertEqual(self.manager.remove_element(""), 0)
+        self.assertEqual(self.manager.remove_element("1234567890124"), 0)
     # End of method test_remove_element.
 
     """
     Test function show_element with existing item.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     @patch.object(library.book_management, "input", create = True)
     def test_show_element_existing(self, input):
-        input.return_value = "Test"
+        input.return_value = "1234567890124"
 
         originalout = sys.stdout
         out = StringIO()
@@ -190,14 +203,27 @@ class TestBookManager(unittest.TestCase):
         self.manager.show_element()
         sys.stdout = originalout
 
-        test = "Exact match will be made!"
+        test = "Exact match will be made!\
+\
+Book:\
+    Title: Test\
+    Authors: \
+        Other\
+    Category: Programming\
+    Formats: \
+        Hardback\
+        eBook\
+    ISBN: 1234567890124\
+    Finished: Yes\
+\
+"
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_existing.
 
     """
     Test function show_element with no existing item.
     """
-    @unittest.skip("Skipped.")
+    #@unittest.skip("Skipped.")
     @patch.object(library.book_management, "input", create = True)
     def test_show_element_no_existing(self, input):
         input.return_value = "TesT"
@@ -209,7 +235,7 @@ class TestBookManager(unittest.TestCase):
         self.manager.show_element()
         sys.stdout = originalout
 
-        test = "Exact match will be made!No book with title TesT found."
+        test = "Exact match will be made!No book with isbn 'TesT' found."
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_no_existing.
 
