@@ -718,8 +718,7 @@ class BookManager(Manager):
 
         # Edit mandatory lists.
         element = self._generate_mandatory_list(element, "authors")
-        print()
-        element = self._generate_mandatory_list(element, "formats")
+        element = self._generate_mandatory_list(element, "formats", ["Hardback", "Paperback", "eBook", "Other"])
 
         finished = Utility.get_answer_yn("Finished{}:".format("" if element["finished"] is None else "[" + element["finished"] + "]"))
         if finished == "y":
@@ -763,9 +762,10 @@ class BookManager(Manager):
 
     :param dict element: The python dictionary containing the values of the element.
     :param str tag: The dictionary key, which holds the list.
+    :param list values: The list of valid values.
     :return dict: The python dictionary containing edited list.
     """
-    def _generate_mandatory_list(self, element, tag):
+    def _generate_mandatory_list(self, element, tag, values = None):
         removelist = []
         # Get items.
         if element[tag] is not None:
@@ -775,7 +775,7 @@ class BookManager(Manager):
                 choice = None
                 # Generate menu
                 # Display menu
-                print("{}: {}".format(tag[:-1], item))
+                print("{}: {}".format(tag[:-1].title(), item))
                 print("1. Keep and continue")
                 print("2. Remove")
                 while choice not in choices:
@@ -799,11 +799,11 @@ class BookManager(Manager):
             for rvalue in removelist:
                 element[tag].remove(rvalue)
         # Add new items.
-        element = self._get_list_values(element, tag)
+        element = self._get_list_values(element, tag, values)
         # Mandatory list cannot be empty.
         while element[tag] is None or len(element[tag]) == 0:
             print("At least one {} is required".format(tag[:-1]))
-            element = self._get_list_values(element, tag)
+            element = self._get_list_values(element, tag, values)
 
         return element
     # End of method _generate_mandatory_list.
@@ -822,14 +822,19 @@ class BookManager(Manager):
 
     :param dict element: The python dictionary containing the values of the element.
     :param str tag: The dictionary key, which holds the list.
+    :param list values: The list of valid values.
     :return dict: The python dictionary containing new list values.
     """
-    def _get_list_values(self, element, tag):
+    def _get_list_values(self, element, tag, values = None):
+        # If values come from a list call _get_list_values_from_list.
+        if values is not None:
+            return self._get_list_values_from_list(element, tag, values)
+        # Allow free input.
         # Add new values.
         values = []
         value = "Enter Loop"
         while value != "":
-            value = input("Add {} [leave empty to stop]: ".format(tag[:-1]))
+            value = input("Add {} [leave empty to stop]: ".format(tag[:-1].title()))
             value = value.strip()
             if value != "":
                 values.append(value)
@@ -849,6 +854,7 @@ class BookManager(Manager):
     Edits or generates a mandatory tag of an element.
 
     :param dict element[=None]: The python dictionary containing the values of the element.
+    :param str tag: The dictionary key, which holds the list.
     :return dict: The python dictionary containing new values.
     """
     def _edit_mandatory_tag(self, element, tag):
@@ -865,8 +871,10 @@ class BookManager(Manager):
     Method: _edit_optional_tag
 
     Edits, generates or removes an optional tag of an element.
+    Values may be typed in freely.
 
     :param dict element[=None]: The python dictionary containing the values of the element.
+    :param str tag: The dictionary key, which holds the list.
     :return dict: The python dictionary containing new values.
     """
     def _edit_optional_tag(self, element, tag):
@@ -881,6 +889,45 @@ class BookManager(Manager):
             element[tag] = value
         return element
     # End of method _edit_optional_tag.
+
+    """
+    Method: _get_list_values_from_list
+
+    Gets new values from the user and add the to a list in the dictionary.
+    Values may be selected from a list only.
+
+    :param dict element[=None]: The python dictionary containing the values of the element.
+    :param str tag: The dictionary key, which holds the list.
+    :param list values: The list of valid values.
+    :return dict: The python dictionary containing new values.
+    """
+    def _get_list_values_from_list(self, element, tag, values):
+        # Display menu.
+        choice = None
+        choices = []
+        print("Valid {}: ".format(tag))
+        for value in values:
+            print("{}. {}".format(values.index(value) + 1, value))
+        while choice is None:
+            # Get user choice.
+            choice = input("Enter your choice[leave empty to stop]: ")
+            if choice != "":
+                try:
+                    choice = int(choice)
+                    choices.append(values[choice - 1])
+                except IndexError:
+                    print("Invalid index {}.".format(choice))
+                except ValueError:
+                    print("Invalid input {}. Only listed numbers are valid.".format(choice))
+                choice = None
+        # Add choices to element.
+        if choices:
+            if element[tag] is None:
+                element[tag] = choices
+            else:
+                element[tag] += choices
+        return element
+    # End of method _get_list_values_from_list.
 # End of class BookManager.
 
 # The following section contains code to execute when script is run from the command line.
