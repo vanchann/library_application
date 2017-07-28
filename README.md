@@ -55,6 +55,8 @@ Text delimiter: \
 
 Book Library CSV header: Title,Author,Category,Format,ISBN,Finished
 Game Library CSV header: Title,Shop,Finished,System
+Music Library CSV header: Title,Artist,Format
+Video Library CSV header: Title,Format
 ```
 DIRECTORY TREE BASED ON DEFAULT CONFIGURATION
 --------------------------------------------------------------------------------
@@ -70,7 +72,7 @@ library_application/
                 __init__.py
                 book_management.py    # Implemented, but still under test.
                 game_management.py    # Implemented, but still under test.
-                music_management.py   # Contains not yet implemented dummy class.
+                music_management.py   # Implemented, but still under test.
                 video_management.py   # Contains not yet implemented dummy class.
                 management.py
         storage/
@@ -82,7 +84,7 @@ library_application/
                         library.xsd
                 music/
                         library.xml
-                        library.xsd   # Will be generated programmatically by MusicManager class
+                        library.xsd
                 video/
                         library.xml
                         library.xsd   # Will be generated programmatically by VideoManager class

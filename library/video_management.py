@@ -12,7 +12,7 @@ from library.support.utility import Utility
 Class: VideoManager
 
 Extends class Manager.
-The BookManager class uses XML to store and manage video elements.
+The VideoManager class uses XML to store and manage video elements.
 Contents maybe created, parsed and destroyed.
 The class also supports validation of the XML file given an XSD schema, so that
 it may be used independently.
@@ -25,9 +25,10 @@ class VideoManager(Manager):
         # Library type.
         libtype = "video"
         # Allow sorting element tags.
-        sortingtags = []
+        sortingtags = ["title", "format"]
+        uniquekey = "title"
         # Call parent initializer.
-        super().__init__(storageroot, libfile, schemafile, libtype, sortingtags)
+        super().__init__(storageroot, libfile, schemafile, libtype, sortingtags, uniquekey)
     # End of initializer.
 # End of class VideoManager.
 

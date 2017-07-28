@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!-- definition of simple elements -->
+<xs:element name="title">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="artist">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="genre">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="format">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CD"/>
+            <xs:enumeration value="MP3"/>
+            <xs:enumeration value="FLAC"/>
+            <xs:enumeration value="OGG"/>
+            <xs:enumeration value="Other"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="releasedate" type="xs:date"/>
+
+<xs:element name="label">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="track">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+<xs:element name="shop">
+    <xs:simpleType>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:element>
+
+
+<!-- definition of complex types -->
+<xs:element name="genres">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="genre" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="formats">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="format" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="tracks">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="track" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:element>
+
+<xs:element name="music">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="title"/>
+            <xs:element ref="artist"/>
+            <xs:element ref="formats"/>
+            <xs:element ref="genres" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="tracks" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="releasedate" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="label" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="shop" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueTrack">
+        <xs:selector xpath="tracks/track"/>
+        <xs:field xpath="."/>
+    </xs:unique>
+</xs:element>
+
+<xs:element name="library">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="music" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueTitle">
+        <xs:selector xpath="music/title"/>
+        <xs:field xpath="."/>
+    </xs:unique>
+</xs:element>
+
+</xs:schema>

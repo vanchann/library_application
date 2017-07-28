@@ -69,7 +69,7 @@ class BookManager(Manager):
                         authorelement.text = author
                     subelement = etree.SubElement(element, "category")
                     subelement.text = row["Category"]
-                    # Add author subelements.
+                    # Add format subelements.
                     formats = row["Format"].split(", ")
                     subelement = etree.SubElement(element, "formats")
                     for bformat in formats:
@@ -914,7 +914,10 @@ class BookManager(Manager):
             if choice != "":
                 try:
                     choice = int(choice)
-                    choices.append(values[choice - 1])
+                    if choice > 0:
+                        choices.append(values[choice - 1])
+                    else:
+                        raise ValueError
                 except IndexError:
                     print("Invalid index {}.".format(choice))
                 except ValueError:

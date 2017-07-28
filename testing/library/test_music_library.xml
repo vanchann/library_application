@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="library.xsd">
+    <music>
+        <title>Test</title>
+        <artist>Art</artist>
+        <formats>
+            <format>MP3</format>
+            <format>Other</format>
+        </formats>
+        <genres>
+            <genre>Gothic</genre>
+            <genre>Rock</genre>
+        </genres>
+        <tracks>
+            <track>One</track>
+            <track>Two</track>
+        </tracks>
+        <releasedate>2007-02-01</releasedate>
+        <label>World</label>
+        <shop>Shop</shop>
+    </music>
+    <music>
+        <title>Another</title>
+        <artist>Art</artist>
+        <formats>
+            <format>FLAC</format>
+        </formats>
+        <label>World</label>
+        <shop>Shop</shop>
+    </music>
+</library>
