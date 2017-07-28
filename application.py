@@ -31,20 +31,20 @@ class Application:
     # End of initializer.
 
     """
-    Method: __invalidconfexit
+    Method: __invalid_configuration_exit
 
     Check for configuration vallidity.
     Notify the user and exit in case of invalid settings.
 
     :sys.exit 2: Invalid configuration.
     """
-    def __invalidconfexit(self):
+    def __invalid_configuration_exit(self):
         # Load configuration
         if Utility.validate(self.__confxsd, self.__confxml) != 0:
             # Validation has failed.
             print("Invalid configuration. Please reconfigure the application")
             sys.exit(2)
-    # End of method __invalidconfexit,
+    # End of method __invalid_configuration_exit,
 
     """
     Method: get_manager
@@ -57,7 +57,7 @@ class Application:
     """
     def get_manager(self, libtype):
         # Configuration vallidity check.
-        self.__invalidconfexit()
+        self.__invalid_configuration_exit()
         # Chech if library type is supported.
         supportedlibs = self.library_types()
         if libtype not in supportedlibs:
@@ -109,7 +109,7 @@ class Application:
     """
     def library_types(self):
         # Configuration vallidity check.
-        self.__invalidconfexit()
+        self.__invalid_configuration_exit()
 
         # Create xml tree.
         tree = etree.parse(self.__confxml)
@@ -169,10 +169,10 @@ class Application:
             if not os.path.isdir(self.__confdir):
                 os.mkdir(self.__confdir)
         except OSError:
-            self.__errorexit(conffile, "directory")
+            self.__error_exit(conffile, "directory")
 
         # Create configuration files.
-        self.__createconf()
+        self.__generate_full_configuration()
     # End of method configure.
 
     """
@@ -201,11 +201,23 @@ class Application:
     # End of method validate_configuration.
 
     """
-    Method: __createconf
+    Method: __generate_full_configuration
 
-    Creates configuration files. Overwrites existed files, if any.
+    Generates configuration files. Overwrites existed files, if any.
     """
-    def __createconf(self):
+    def __generate_full_configuration(self):
+        # Create the xsd tree.
+        self.__generate_schema_file()
+        # Create the xml tree.
+        self.__generate_config_file()
+    # End of method __generate_full_configuration.
+
+    """
+    Method: __generate_config_file
+
+    Generates configuration XML file. Overwrites existing file, if any.
+    """
+    def __generate_config_file(self):
         # Create the xml tree.
         root = etree.XML("""
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="config.xsd"></config>
@@ -229,8 +241,15 @@ class Application:
         try:
             xmlout.write(self.__confxml, xml_declaration=True, encoding="UTF-8", pretty_print=True)
         except OSError:
-            self.__errorexit(conffile)
+            self.__error_exit(conffile)
+    # End of method __generate_config_file.
 
+    """
+    Method: __generate_schema_file
+
+    Generates schema XSD file. Overwrites existing file, if any.
+    """
+    def __generate_schema_file(self):
         # Create the xsd tree.
         xsdroot = etree.XML("""
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -290,8 +309,8 @@ class Application:
         try:
             xsdout.write(self.__confxsd, xml_declaration=True, encoding="UTF-8", pretty_print=True)
         except OSError:
-            self.__errorexit(confschema)
-    # End of method __createconf.
+            self.__error_exit(confschema)
+    # End of method __generate_schema_file.
 
     """
     Method: __errorioexit
@@ -303,14 +322,14 @@ class Application:
     :param int code[=1]: The error code for the termination of the application.
     :sys.exit code: Ths specified parameter code.
     """
-    def __errorexit(self, name, dirorfile = "file", code = 1):
+    def __error_exit(self, name, dirorfile = "file", code = 1):
         # Show error messages and terminate execution of the program.
         print("Creation of {} {} failed".format(dirorfile, name))
         print("Check if path is valid and user has write privilege.")
         print("Program Excecution is terminating.")
         # Exit with an error code.
         sys.exit(code)
-    # End of method __errorexit.
+    # End of method __error_exit.
 # End of class Application.
 
 # The following section contains code to execute when script is run from the command line.
