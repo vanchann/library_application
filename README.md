@@ -46,6 +46,12 @@ even a GUI version.
 I'm developing this application according to my personal needs, but new ideas would
 be more than welcome.
 
+TO DO NEXT
+--------------------------------------------------------------------------------
+- More tests.
+- Video library implementation is very basic, but enough for now. I'm considering expanding it.
+- Implement a bit more default functionality to Manager parent class for convenience. So that it will be easier to implement basic functionality for new library types, if needed.
+
 CSV FORMAT
 --------------------------------------------------------------------------------
 ```
@@ -73,7 +79,7 @@ library_application/
                 book_management.py    # Implemented, but still under test.
                 game_management.py    # Implemented, but still under test.
                 music_management.py   # Implemented, but still under test.
-                video_management.py   # Contains not yet implemented dummy class.
+                video_management.py   # Implemented, but still under test.
                 management.py
         storage/
                 book/
@@ -87,7 +93,7 @@ library_application/
                         library.xsd
                 video/
                         library.xml
-                        library.xsd   # Will be generated programmatically by VideoManager class
+                        library.xsd   
         testing/                      # Testing is not exhaustive nor complete at this time.
                 library/
                         __init__.py
@@ -95,6 +101,10 @@ library_application/
                         test_book_management.py
                         test_game_library.xml
                         test_game_management.py
+                        test_music_library.xml
+                        test_music_management.py
+                        test_video_library.xml
+                        test_video_management.py
                 __init__.py
                 test_run.py
                 test.py

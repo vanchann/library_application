@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="library.xsd">
+    <video>
+        <title>Test</title>
+        <formats>
+            <format>DVD</format>
+            <format>Other</format>
+        </formats>
+        <genres>
+            <genre>Action</genre>
+            <genre>Movie</genre>
+        </genres>
+        <releasedate>2007-06-24</releasedate>
+        <label>World</label>
+        <shop>Shop</shop>
+    </video>
+    <video>
+        <title>Another</title>
+        <formats>
+            <format>MP4</format>
+        </formats>
+        <label>World</label>
+        <shop>Shop</shop>
+    </video>
+</library>

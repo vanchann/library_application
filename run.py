@@ -43,7 +43,7 @@ def main():
 
     parser.add_argument("--reverse", action = "store_true", help = "sort items in reverse (descending) order.")
     parser.add_argument("--value", help = "the 'VALUE' to search for.")
-    parser.add_argument("--version", action = "version", version = "%(prog)s 0.6.3")
+    parser.add_argument("--version", action = "version", version = "%(prog)s 0.8.0")
 
     args = parser.parse_args()
     # Create Application object app.
