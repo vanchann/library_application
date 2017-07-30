@@ -98,7 +98,12 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_search_elements("finished", "e")
         sys.stdout = originalout
 
-        test = "Title  | Shop     | Finished | System-------|----------|----------|-------Test   | DRM-free | Yes      | Windows Mac Linux a      | DRM-free | Yes      | Nofile | Free     | Yes      | Other Linux "
+        test = "\
+Title  | Shop     | Finished | System\
+-------|----------|----------|-------\
+Test   | DRM-free | Yes      | Windows Mac Linux \
+a      | DRM-free | Yes      | \
+Nofile | Free     | Yes      | Other Linux "
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method show_search_elements.
 
@@ -122,7 +127,14 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_all_elements()
         sys.stdout = originalout
 
-        test = "Title  | Shop     | Finished | System-------|----------|----------|-------a      | DRM-free | Yes      | A      | DRM-free | No       | Nofile | Free     | Yes      | Other Linux Test   | DRM-free | Yes      | Windows Mac Linux Test1  | DRM-free | No       | "
+        test = "\
+Title  | Shop     | Finished | System\
+-------|----------|----------|-------\
+a      | DRM-free | Yes      | \
+A      | DRM-free | No       | \
+Nofile | Free     | Yes      | Other Linux \
+Test   | DRM-free | Yes      | Windows Mac Linux \
+Test1  | DRM-free | No       | "
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_all_elements.
 
@@ -143,19 +155,41 @@ class TestGameManager(unittest.TestCase):
     # End of method test_get_element_existent.
 
     """
-    Test function add_element_invalid_dict.
+    Test function add_element using invalid dictionary key.
     """
     #@unittest.skip("Skipped.")
-    def test_add_element_invalid_dict(self):
-        self.assertEqual(self.manager.add_element({"titlE": "Dict", "shop": "Free", "finished": "No"}), 1)
-    # End of method test_add_element_invalid_dict.
+    def test_add_element_invalid_dict_key(self):
+        game = {"titlE": "Dict", "shop": "Free", "finished": "No"}
+        self.assertEqual(self.manager.add_element(game), 1)
+    # End of method test_add_element_invalid_dict_key.
+
+    """
+    Test function add_element using invalid dictionary value.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_invalid_dict_value(self):
+        game = {"title": "Dict installer", "shop": "Free", "finished": "",
+                "installer": [{"system": "Mac", "filename": ["file1", "file2"]}]}
+        self.assertEqual(self.manager.add_element(game), 3)
+    # End of method test_add_element_invalid_dict_value.
+
+    """
+    Test function add_element using existing item.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_existing_item(self):
+        game = {"title": "Test", "shop": "Free", "finished": "No",
+                "installer": [{"system": "Mac", "filename": ["file1", "file2"]}]}
+        self.assertEqual(self.manager.add_element(game), 3)
+    # End of method test_add_element_existing_item.
 
     """
     Test function add_element without installer.
     """
     #@unittest.skip("Skipped.")
     def test_add_element_no_installer(self):
-        self.assertEqual(self.manager.add_element({"title": "Dict", "shop": "Free", "finished": "No"}), 0)
+        game = {"title": "Dict", "shop": "Free", "finished": "No"}
+        self.assertEqual(self.manager.add_element(game), 0)
     # End of method test_add_element_no_installer.
 
     """
@@ -191,7 +225,26 @@ class TestGameManager(unittest.TestCase):
         self.manager.show_element()
         sys.stdout = originalout
 
-        test = "Exact match will be made!Game:    Title: Test    Shop: DRM-free    Finished: Yes    Installer:         System: Windows        Lastupdated: 2017-07-14        Filename: win_file_1        Filename: win_file_2        Filename: win_file_3    Installer:         System: Mac        Filename: mac_file_1        Filename: mac_file_2    Installer:         System: Linux        Filename: lin_file_1        Filename: lin_file_2"
+        test = "\
+Exact match will be made!\
+Game:\
+    Title: Test\
+    Shop: DRM-free\
+    Finished: Yes\
+    Installer: \
+        System: Windows\
+        Lastupdated: 2017-07-14\
+        Filename: win_file_1\
+        Filename: win_file_2\
+        Filename: win_file_3\
+    Installer: \
+        System: Mac\
+        Filename: mac_file_1\
+        Filename: mac_file_2\
+    Installer: \
+        System: Linux\
+        Filename: lin_file_1\
+        Filename: lin_file_2"
         self.assertEqual("".join(out.getvalue().split(os.linesep)), test)
     # End of method test_show_element_existing.
 

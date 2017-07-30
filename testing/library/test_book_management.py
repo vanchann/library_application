@@ -149,24 +149,46 @@ Test  | Other            | Programming | Hardback, eBook | 1234567890124 | Yes  
     # End of method test_get_element_existent.
 
     """
-    Test function add_element_invalid_dict.
+    Test function add_element using invalid dictionary key.
     """
     #@unittest.skip("Skipped.")
-    def test_add_element_invalid_dict(self):
-        self.assertEqual(self.manager.add_element({
-            "title": "A", "authors": ["A"], "category": "A", "format": ["eBook"], "isbn": "1234567890987",
-            "publicationdate": "2017-03-31", "publisher": "A", "edition": "6",
-            "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"
-        }), 1)
-    # End of method test_add_element_invalid_dict.
+    def test_add_element_invalid_dict_key(self):
+        book = {"title": "A", "authors": ["A"], "category": "A", "format": ["eBook"], "isbn": "1234567890987",
+                "publicationdate": "2017-03-31", "publisher": "A", "edition": "6",
+                "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"}
+        self.assertEqual(self.manager.add_element(book), 1)
+    # End of method test_add_element_invalid_dict_key.
+
+    """
+    Test function add_element using invalid dictionary value.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_invalid_dict_value(self):
+        book = {"title": "A", "authors": ["A"], "category": "A", "formats": ["eBook"], "isbn": "invalid",
+                "publicationdate": "2017-03-31", "publisher": "A", "edition": "6",
+                "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"}
+        self.assertEqual(self.manager.add_element(book), 3)
+    # End of method test_add_element_invalid_dict_value.
+
+    """
+    Test function add_element using existing item.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_existing_item(self):
+        book = {"title": "A", "authors": ["A"], "category": "A", "formats": ["eBook"], "isbn": "1234567890123",
+                "publicationdate": "2017-03-31", "publisher": "A", "edition": "6",
+                "pagenumber": "850", "lastpageread": "10", "shop": "A", "finished": "No"}
+        self.assertEqual(self.manager.add_element(book), 3)
+    # End of method test_add_element_existing_item.
 
     """
     Test function add_element without optional elements.
     """
     #@unittest.skip("Skipped.")
     def test_add_element_no_optional(self):
-        self.assertEqual(self.manager.add_element({
-            "title": "A", "authors": ["A"], "category": "A", "formats": ["eBook"], "isbn": "1234567890987", "finished": "No"}), 0)
+        book = {"title": "A", "authors": ["A"], "category": "A", "formats": ["eBook"],
+                "isbn": "1234567890987", "finished": "No"}
+        self.assertEqual(self.manager.add_element(book), 0)
     # End of method test_add_element_no_optional.
 
     """

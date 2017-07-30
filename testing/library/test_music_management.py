@@ -151,24 +151,45 @@ Test    | Art    | MP3, Other | Gothic, Rock"
     # End of method test_get_element_existent.
 
     """
-    Test function add_element_invalid_dict.
+    Test function add_element using invalid dictionary key.
     """
     #@unittest.skip("Skipped.")
-    def test_add_element_invalid_dict(self):
-        self.assertEqual(self.manager.add_element({
-            "titlE": "A", "artist": "A",
-            "formats": ["CD", "MP3"], "genres": ["Pop"], "tracks": ["One"],
-            "releasedate": "2015-03-05", "label": "A", "shop": "A"
-        }), 1)
-    # End of method test_add_element_invalid_dict.
+    def test_add_element_invalid_dict_key(self):
+        music = {"titlE": "A", "artist": "A",
+                 "formats": ["CD", "MP3"], "genres": ["Pop"], "tracks": ["One"],
+                 "releasedate": "2015-03-05", "label": "A", "shop": "A"}
+        self.assertEqual(self.manager.add_element(music), 1)
+    # End of method test_add_element_invalid_dict_key.
+
+    """
+    Test function add_element using invalid dictionary value.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_invalid_dict_value(self):
+        music = {"title": "A", "artist": "A",
+        "formats": ["CD", "MP3"], "genres": ["Pop"], "tracks": ["One", "One"],
+        "releasedate": "2015-03-05", "label": "A", "shop": "A"}
+        self.assertEqual(self.manager.add_element(music), 3)
+    # End of method test_add_element_invalid_dict_value.
+
+    """
+    Test function add_element using existing item.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_existing_item(self):
+        music = {"title": "Test", "artist": "A",
+        "formats": ["CD", "MP3"], "genres": ["Pop"], "tracks": ["One"],
+        "releasedate": "2015-03-05", "label": "A", "shop": "A"}
+        self.assertEqual(self.manager.add_element(music), 3)
+    # End of method test_add_element_existing_item.
 
     """
     Test function add_element without optional elements.
     """
     #@unittest.skip("Skipped.")
     def test_add_element_no_optional(self):
-        self.assertEqual(self.manager.add_element({
-            "title": "A", "artist": "A", "formats": ["CD", "MP3"]}), 0)
+        music = {"title": "A", "artist": "A", "formats": ["CD", "MP3"]}
+        self.assertEqual(self.manager.add_element(music), 0)
     # End of method test_add_element_no_optional.
 
     """

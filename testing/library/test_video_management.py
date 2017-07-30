@@ -150,22 +150,42 @@ Test    | DVD, Other | Action, Movie"
     # End of method test_get_element_existent.
 
     """
-    Test function add_element_invalid_dict.
+    Test function add_element using invalid dictionary key.
     """
     #@unittest.skip("Skipped.")
-    def test_add_element_invalid_dict(self):
-        self.assertEqual(self.manager.add_element({
-            "title": "A", "formatS": ["DVD", "Other"], "genres": ["A"],
-            "releasedate": "2014-08-08", "label": "R", "shop": "W"
-        }), 1)
-    # End of method test_add_element_invalid_dict.
+    def test_add_element_invalid_dict_key(self):
+        video = {"title": "A", "formatS": ["DVD", "Other"], "genres": ["A"],
+                 "releasedate": "2014-08-08", "label": "R", "shop": "W"}
+        self.assertEqual(self.manager.add_element(video), 1)
+    # End of method test_add_element_invalid_dict_key.
+
+    """
+    Test function add_element using invalid dictionary value.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_invalid_dict_value(self):
+        video = {"title": "A", "formats": ["DVD", "Other"], "genres": ["A"],
+                 "releasedate": "2014-31-08", "label": "R", "shop": "W"}
+        self.assertEqual(self.manager.add_element(video), 3)
+    # End of method test_add_element_invalid_dict_value.
+
+    """
+    Test function add_element using existing item.
+    """
+    #@unittest.skip("Skipped.")
+    def test_add_element_existing_item(self):
+        video = {"title": "Test", "formats": ["DVD", "Other"], "genres": ["A"],
+                 "releasedate": "2014-08-08", "label": "R", "shop": "W"}
+        self.assertEqual(self.manager.add_element(video), 3)
+    # End of method test_add_element_existing_item.
 
     """
     Test function add_element without optional elements.
     """
     #@unittest.skip("Skipped.")
     def test_add_element_no_optional(self):
-        self.assertEqual(self.manager.add_element({"title": "A", "formats": ["DVD", "Other"]}), 0)
+        video = {"title": "A", "formats": ["DVD", "Other"]}
+        self.assertEqual(self.manager.add_element(video), 0)
     # End of method test_add_element_no_optional.
 
     """
@@ -173,9 +193,8 @@ Test    | DVD, Other | Action, Movie"
     """
     #@unittest.skip("Skipped.")
     def test_add_element_with_optional(self):
-        video = {"title": "A", "artist": "A",
-        "title": "A", "formats": ["DVD", "Other"], "genres": ["A"],
-        "releasedate": "2014-08-08", "label": "R", "shop": "W"}
+        video = {"title": "A", "formats": ["DVD", "Other"], "genres": ["A"],
+                 "releasedate": "2014-08-08", "label": "R", "shop": "W"}
         self.assertEqual(self.manager.add_element(video), 0)
     # End of method test_add_element_with_optional.
 
