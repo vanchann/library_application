@@ -457,7 +457,7 @@ class Manager:
         if isinstance(elements, int):
             print("Invalid storage file {}.".format(self._xmlfile))
         elif elements is None:
-            print("No item with '{}' containing '{}' has benn found.".format(element.title(), value))
+            print("No item with '{}' containing '{}' has been found.".format(element.title(), value))
         else:
             # Show table of results.
             self.show_table(elements)
