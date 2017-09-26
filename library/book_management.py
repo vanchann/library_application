@@ -338,9 +338,9 @@ class BookManager(Manager):
         # Search for elements containing the value.
         tnodes = None
         if element == "author" or element == "format":
-            tnodes = tree.xpath("/library/{0}/{1}s/{1}[contains(., '{2}')]/ancestor::{0}".format(self._libtype, element, value))
+            tnodes = tree.xpath("/library/{0}/{1}s/{1}[contains(translate(., '{3}', '{4}'), '{2}')]/ancestor::{0}".format(self._libtype, element, value.lower(), self._uppercase, self._lowercase))
         else:
-            tnodes = tree.xpath("/library/{0}/{1}[contains(., '{2}')]/ancestor::{0}".format(self._libtype, element, value))
+            tnodes = tree.xpath("/library/{0}/{1}[contains(translate(., '{3}', '{4}'), '{2}')]/ancestor::{0}".format(self._libtype, element, value.lower(), self._uppercase, self._lowercase))
 
         # Return elements if exist or none if list is empty.
         if tnodes:

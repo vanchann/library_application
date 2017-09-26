@@ -28,6 +28,9 @@ class Manager:
         self._xsdfile = os.path.join(self._storageroot, self._libtype, schemafile)
         self._sortingtags = sortingtags
         self._uniquekey = uniquekey
+        # Initialize character sets for case inseincitive rearches.
+        self._uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        self._lowercase = 'abcdefghijklmnopqrstuvwxyz'
     # End of initializer.
 
     # Implemented methods, whis may be called from a Manager instance object.

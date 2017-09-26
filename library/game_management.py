@@ -262,7 +262,7 @@ class GameManager(Manager):
         # Create xml tree.
         tree = etree.parse(self._xmlfile)
         # Search for elements containing the value.
-        tnodes = tree.xpath("/library/{0}/{1}[contains(., '{2}')]/ancestor::{0}".format(self._libtype, element, value))
+        tnodes = tree.xpath("/library/{0}/{1}[contains(translate(., '{3}', '{4}'), '{2}')]/ancestor::{0}".format(self._libtype, element, value.lower(), self._uppercase, self._lowercase))
 
         # Return elements if exist or none if list is empty.
         if tnodes:
